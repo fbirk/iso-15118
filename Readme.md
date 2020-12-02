@@ -1,6 +1,19 @@
 # Implementierung des ISO-15118 für Devolo_dLan_GreenPHY eval Boards
 
+## Inhalt
+1. [Setup](#setup)  
+	1.1 [Eval-Boards](#eval-boards)  
+	1.2 [Host-System](#host-system)  
+    1.3 [RISE V2G Open Source
+    Implementierung](#rise-v2g-open-source-implementierung)  
+2. [Kommunikation zwischen Host und Eval
+   Boards](#kommunikation-zwischen-host-und-eval-boards)  
+   2.1 [Erste Verbindungs und Statusabfrage](#erste-verbindungs-und-statusabfrage)
+
+
 ## Setup
+Anbei sind die Schritte beschrieben, um die Testumgebung mit den beiden GreenPHY
+Eval Boards zum Laufen zu bekommen.
 
 ### Eval-Boards
 Anschluss der Kabel folgendem Bild bzw. der Anleitung entnehmen (links PEV,
@@ -18,6 +31,32 @@ rechts EVSE):
   * für Arch-Linux als AUR-Package
   * andernfalls suchen oder von [GitHub](https://github.com/qca/open-plc-utils)
     beziehen
+
+### RISE V2G Open Source Implementierung
+* Download des [GitHub Repos](https://github.com/V2GClarity/RISE-V2G)
+* RISE-V2G-SHARED/pom.xml anpassen:
+	* folgendes unter `<dependencies>` einfügen:
+	```XML
+	<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.3.1</version>
+			<scope>runtime</scope>
+		</dependency>
+	```
+    * die javax.xml.bind dependencies wurden im JDK Version > 8 entfernt und
+      müssen so nachträglich installiert werden
+* maven-dependancies laden und das Projekt bauen
+* zum ersten Testen:
+    * StartEVCC ausführen (RISE-V2G-EVCC > src > main >
+      com.v2gclarity.risev2g.evcc > main)
+	* StartSECC ausführen (RISE-V2G-SECC > analog zu oben )
+
   
 ## Kommunikation zwischen Host und Eval Boards
 Die Eval-Boards haben eine Atheros QCA7000 Chip und können über die, durch
@@ -31,7 +70,7 @@ Vorbelegten MACs und entsprechende Ethernet-Interfaces (auf dem Host-System):
 * EVSE: BC:F2:AF:F1:4F:C4 (Ethernet-Interface: enp0s20f0u2u4)
 * PEV:  BC:F2:AF:F1:CC:03 (Ethernet-Interface: enp0s20f0u3u1)
 
-### Erste Verbindungs- und Statusabfrage
+### Erste Verbindungs und Statusabfrage
 * **plctool -m**: Netzwerk-Config abfragen
   * `network->STATIONS = 1` zeigt, dass das Board über Powerline mit einem
     Netzwerk Verbindung aufgebaut hat, was auch aus der Übertragungsrate > 0
