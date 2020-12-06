@@ -8,7 +8,9 @@
     Implementierung](#rise-v2g-open-source-implementierung)  
 2. [Kommunikation zwischen Host und Eval
    Boards](#kommunikation-zwischen-host-und-eval-boards)  
-   2.1 [Erste Verbindungs und Statusabfrage](#erste-verbindungs-und-statusabfrage)
+   2.1 [Erste Verbindungs und
+   Statusabfrage](#erste-verbindungs-und-statusabfrage)  
+   2.2 [NMK neu setzen](#nmk-neu-setzen)
 
 
 ## Setup
@@ -20,10 +22,13 @@ Anschluss der Kabel folgendem Bild bzw. der Anleitung entnehmen (links PEV,
 rechts EVSE):
 ![image](setup_evalboards_3.jpg)
 * Stromversorgung über Micro-USB Anschluss (hier über USB-Hub betrieben)
-* Powerline-Anschluss (AC-Line) beider Boards an **gleicher** Mehrfachsteckdosenleiste
-* beide Boards über Twisted-Pair-Anschluss verbunden (grüner Stecker), Belegung jeweils:
-  * links blaues Kabel
-  * rechts braunes Kabel
+* es gibt 3 Möglichkeiten, wie zwei eval boards untereinander kommunizieren
+  können, abhängig ist dies davon, wie die Jumper JC6, JC7 und JC8 belegt sind:
+	* (*JC8 geschlossen, JC7 offen*) Powerline-Anschluss (AC-Line) beider Boards an **gleicher** Mehrfachsteckdosenleiste
+	* (*JC7 geschlossen, JC8 offen, JC6 offen für 100W impendanz*) beide Boards über Twisted-Pair-Anschluss verbunden (grüner Stecker), Belegung jeweils:
+  		* links blaues Kabel
+  		* rechts braunes Kabel
+	* (*JC7 geschlossen, JC8 offen, JC6 geschlossen für 50W impendanz*) Koax-Kabel
 * Kommunikation zum Host (Entwicklungsrechner) über Ethernet
 
 ### Host-System
@@ -116,4 +121,15 @@ enp0s20f0u2u4 BC:F2:AF:F1:4F:C4 QCA7000 MAC-QCA7000-1.1.0.727-02-20130826-FINAL
 	USR SLAC-EVSE
 	CCo Always
 	MDU N/A
+```
+
+### NMK neu setzen
+Sollte der Network Membership Key (NMK) eines der Boards verändert worden sein,
+kann dieser mittels folgendem Befehl neu gesetzt werden:
+(anzupassen sind jeweils Ethernet-Interface, MAC-Adresse und NMK des anderen
+Boards, zu welchem Netzwerk man sich verbinden möchte)
+```
+plctool -i eth1 -p settings.pib BC:F2:AF:F1:CC:03 && \
+      modpib -N FA:6C:AC:B4:BB:66:42:95:EC:E6:9F:20:E5:7F:87:23 -v settings.pib && \
+      plctool -i eth1 -P settings.pib BC:F2:AF:F1:CC:03
 ```
