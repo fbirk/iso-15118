@@ -41,6 +41,7 @@ public abstract class V2GImplementationFactory {
 	 * @param cls Target class of the build instance
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	protected static <T> T buildFromProperties(String propertyName, Class<T> cls) {
 		try {
 			String className = MiscUtils.getProperties().getProperty(propertyName);

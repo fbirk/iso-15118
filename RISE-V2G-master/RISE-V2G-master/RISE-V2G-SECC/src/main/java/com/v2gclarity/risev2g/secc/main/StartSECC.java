@@ -34,11 +34,6 @@ import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WebsocketServer;
 import com.v2gclarity.risev2g.shared.enumerations.GlobalValues;
 import com.v2gclarity.risev2g.shared.utils.MiscUtils;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
-
 public class StartSECC {
 	
 	public static void main(String[] args) {

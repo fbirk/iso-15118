@@ -28,7 +28,6 @@ import com.v2gclarity.risev2g.shared.enumerations.V2GMessages;
 import com.v2gclarity.risev2g.shared.messageHandling.ReactionToIncomingMessage;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.BodyBaseType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ChargingSessionType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentServiceSelectionReqType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ResponseCodeType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.SessionStopReqType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.SessionStopResType;

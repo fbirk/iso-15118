@@ -31,7 +31,6 @@ import com.v2gclarity.risev2g.shared.messageHandling.TerminateSession;
 import com.v2gclarity.risev2g.shared.utils.SecurityUtils;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ChargeProgressType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ChargingSessionType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ChargingStatusReqType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.CurrentDemandResType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.DCEVSEStatusType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EVSENotificationType;

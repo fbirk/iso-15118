@@ -68,6 +68,7 @@ public class UDPClient {
 	 * a V2G communication session.
 	 * @return True if the initialization of the UDP client was successful, false otherwise
 	 */
+	@SuppressWarnings("deprecation")
 	public boolean initialize() {
 		setSocketToUDPServer(null);
 		

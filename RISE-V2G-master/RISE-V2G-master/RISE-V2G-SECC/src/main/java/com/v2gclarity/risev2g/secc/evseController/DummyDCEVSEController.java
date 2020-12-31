@@ -149,6 +149,7 @@ public class DummyDCEVSEController implements IDCEVSEController {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public PhysicalValueType getEVSEMaximumVoltageLimit() {
 		PhysicalValueType evseMaxVoltageLimit = new PhysicalValueType();
@@ -161,6 +162,7 @@ public class DummyDCEVSEController implements IDCEVSEController {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public PhysicalValueType getEVSEMinimumVoltageLimit() {
 		PhysicalValueType evseMinVoltageLimit = new PhysicalValueType();
@@ -173,6 +175,7 @@ public class DummyDCEVSEController implements IDCEVSEController {
 	}
 	
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public PhysicalValueType getEVSEMaximumCurrentLimit() {
 		PhysicalValueType evseMaxCurrentLimit = new PhysicalValueType();

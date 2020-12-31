@@ -62,7 +62,6 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.MessageHeaderType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.MeteringReceiptResType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentDetailsReqType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentDetailsResType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentOptionType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentServiceSelectionReqType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentServiceSelectionResType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PowerDeliveryReqType;

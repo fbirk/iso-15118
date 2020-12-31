@@ -1288,6 +1288,7 @@ public final class SecurityUtils {
 	 * 
 	 * @param sharedSecret The shared secret derived from the ECDH algorithm
 	 */
+	@SuppressWarnings("unused")
 	public static SecretKey generateSessionKey(byte[] sharedSecret) {
 	    MessageDigest md = null;
 	    /*

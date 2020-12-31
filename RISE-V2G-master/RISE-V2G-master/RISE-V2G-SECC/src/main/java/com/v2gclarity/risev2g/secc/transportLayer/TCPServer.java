@@ -58,6 +58,7 @@ public final class TCPServer extends StatefulTransportLayerServer {
 		return true;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		try {
