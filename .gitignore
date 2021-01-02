@@ -1,6 +1,7 @@
 iso-15118/
 qca7000-master/
 open-plc-utils-master/
+*/.idea/
 
 *.pdf
 *.zip
