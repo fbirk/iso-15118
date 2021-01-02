@@ -26,17 +26,14 @@ package com.v2gclarity.risev2g.evcc.states;
 import java.util.concurrent.TimeUnit;
 
 import com.v2gclarity.risev2g.evcc.session.V2GCommunicationSessionEVCC;
-import com.v2gclarity.risev2g.shared.enumerations.GlobalValues;
 import com.v2gclarity.risev2g.shared.enumerations.V2GMessages;
 import com.v2gclarity.risev2g.shared.messageHandling.ReactionToIncomingMessage;
 import com.v2gclarity.risev2g.shared.messageHandling.TerminateSession;
 import com.v2gclarity.risev2g.shared.misc.TimeRestrictions;
-import com.v2gclarity.risev2g.shared.utils.SecurityUtils;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.AuthorizationReqType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.AuthorizationResType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ChargeParameterDiscoveryReqType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EVSEProcessingType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentOptionType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.V2GMessage;
 
 public class WaitForAuthorizationRes extends ClientState {

@@ -103,6 +103,7 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 	private MeterInfoType sentMeterInfo;
 	private boolean chargeProgressStarted; // for checking [V2G2-812]
 	
+	@SuppressWarnings("deprecation")
 	public V2GCommunicationSessionSECC(ConnectionHandler connectionHandler) {
 		setConnectionHandler(connectionHandler);
 		

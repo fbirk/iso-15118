@@ -65,6 +65,7 @@ public class UDPServer extends Observable implements Runnable {
 	 * a V2G communication session.
 	 * @return True if the initialization of the UDP server was successful, false otherwise
 	 */
+	@SuppressWarnings("deprecation")
 	public boolean initialize() {
 		setUdpClientRequest(new byte[10]);
 		
@@ -124,6 +125,7 @@ public class UDPServer extends Observable implements Runnable {
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	public void stop() {
 		getLogger().debug("UDP server will be stopped now");
 		

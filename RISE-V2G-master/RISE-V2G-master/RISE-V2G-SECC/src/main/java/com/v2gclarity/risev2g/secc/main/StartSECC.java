@@ -30,13 +30,9 @@ import com.v2gclarity.risev2g.secc.transportLayer.TCPServer;
 import com.v2gclarity.risev2g.secc.transportLayer.TLSServer;
 import com.v2gclarity.risev2g.secc.transportLayer.UDPServer;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WallboxServerEndpoint;
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WebsocketServer;
 import com.v2gclarity.risev2g.shared.enumerations.GlobalValues;
 import com.v2gclarity.risev2g.shared.utils.MiscUtils;
-
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
 public class StartSECC {
 	
@@ -47,6 +43,7 @@ public class StartSECC {
 		UDPServer udpServer = UDPServer.getInstance();
 		TCPServer tcpServer = TCPServer.getInstance();
 		TLSServer tlsServer = TLSServer.getInstance();
+		WebsocketServer websocketServer = WebsocketServer.getInstance();
 		
 		if (!udpServer.initialize() || !tlsServer.initialize() || !tcpServer.initialize()) {
 			logger.fatal("Unable to start SECC because UDP, TCP or TLS server could not be initialized");
@@ -60,11 +57,12 @@ public class StartSECC {
 			Thread tlsServerThread = new Thread(tlsServer);
 			tlsServerThread.setName("TLSServerThread");
 			
-			// Initialize the server end-point to the HSRM wallbox  
+			Thread websocketServerThread = new Thread(websocketServer);
+			websocketServerThread.setName("WebsocketServerThread");
+			
+			// Initialize the server end-point to the HSRM Wallbox  
 			WallboxServerEndpoint wallboxServerEndpoint = new WallboxServerEndpoint();
-			
-			// startWebsocketServer();
-			
+						
 			// All transport layer threads need to be initialized before initializing the SECC session handler.
 			new V2GCommunicationSessionHandlerSECC(wallboxServerEndpoint);
 			
@@ -77,44 +75,7 @@ public class StartSECC {
 			udpServerThread.start();
 			tcpServerThread.start();
 			tlsServerThread.start();
+			websocketServerThread.start();
 		} 
-	}
-	
-	private static void startWebsocketServer() {
-        Server server = new Server();
-        ServerConnector connector = new ServerConnector(server);
-        connector.setPort(8080);
-        server.addConnector(connector);
-
-        // Setup the basic application "context" for this application at "/"
-        // This is also known as the handler tree (in jetty speak)
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        server.setHandler(context);
-
-        try
-        {
-            // Initialize javax.websocket layer
-            WebSocketServerContainerInitializer.configure(context,
-                (servletContext, wsContainer) ->
-                {
-                    // This lambda will be called at the appropriate place in the
-                    // ServletContext initialization phase where you can initialize
-                    // and configure  your websocket container.
-
-                    // Configure defaults for container
-                    wsContainer.setDefaultMaxTextMessageBufferSize(65535);
-
-                    // Add WebSocket endpoint to javax.websocket layer
-                    wsContainer.addEndpoint(WallboxServerEndpoint.class);
-                });
-
-            server.start();
-            server.join();
-        }
-        catch (Throwable t)
-        {
-            t.printStackTrace(System.err);
-        }
 	}
 }

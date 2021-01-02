@@ -196,6 +196,7 @@ public abstract class ServerState extends State {
 	 * 
 	 * @param response The respective response message whose mandatory fields are to be set
 	 */
+	@SuppressWarnings("deprecation")
 	protected void setMandatoryFieldsForFailedRes(BodyBaseType responseMessage, ResponseCodeType responseCode) {
 		switch (responseMessage.getClass().getSimpleName()) {
 		case "SessionSetupResType":

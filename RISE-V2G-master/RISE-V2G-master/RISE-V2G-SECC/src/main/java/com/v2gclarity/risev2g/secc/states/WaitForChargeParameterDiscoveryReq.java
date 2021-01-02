@@ -40,7 +40,6 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ChargeParameterDiscovery
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.DCEVChargeParameterType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EVSEProcessingType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EnergyTransferModeType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.IsolationLevelType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ResponseCodeType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.SAScheduleListType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.V2GMessage;

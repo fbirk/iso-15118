@@ -197,6 +197,7 @@ public class DummyBackendInterface implements IBackendInterface {
 		return salesTariffEntry;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private PMaxScheduleEntryType createPMaxScheduleEntry(String multiplier, short pMax, long start) {
 		PhysicalValueType pMaxValue = new PhysicalValueType();
 		pMaxValue.setMultiplier(new Byte(multiplier));

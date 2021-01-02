@@ -38,8 +38,6 @@ import com.v2gclarity.risev2g.shared.utils.ByteUtils;
 import com.v2gclarity.risev2g.shared.utils.MiscUtils;
 import com.v2gclarity.risev2g.shared.utils.SecurityUtils;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EnergyTransferModeType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentOptionListType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentOptionType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.V2GMessage;
 
 public abstract class V2GCommunicationSession extends Observable {
@@ -77,6 +75,7 @@ public abstract class V2GCommunicationSession extends Observable {
 		return sessionID;
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected void pauseSession(PauseSession pauseObject) {
 		getLogger().info("Pausing V2G communication session");
 		setChanged();
@@ -84,6 +83,7 @@ public abstract class V2GCommunicationSession extends Observable {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	protected void terminateSession(TerminateSession termination) {
 		String terminationPrefix = "Terminating V2G communication session, reason: ";
 		

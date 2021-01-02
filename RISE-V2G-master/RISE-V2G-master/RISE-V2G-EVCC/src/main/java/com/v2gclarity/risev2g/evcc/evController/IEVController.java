@@ -27,7 +27,6 @@ import com.v2gclarity.risev2g.evcc.session.V2GCommunicationSessionEVCC;
 import com.v2gclarity.risev2g.shared.enumerations.CPStates;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ChargingProfileType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EnergyTransferModeType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentOptionListType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentOptionType;
 
 public interface IEVController {
