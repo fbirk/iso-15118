@@ -1,27 +1,44 @@
 package com.v2gclarity.risev2g.secc.wallboxServerEndpoint;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.hsrm.cs.wallbox.shared.enums.MessageType;
+import de.hsrm.cs.wallbox.shared.models.WallboxInterfaceMessage;
+
+/**
+ * Wallbox Websocket Server Endpoint 
+ * Implementation according to Baeldung-Tutorial: https://www.baeldung.com/java-websockets
+ * 
+ * @author Fabian Birk
+ */
+
+@ClientEndpoint
 @ServerEndpoint(value = "/v2gServer/", decoders = MessageDecoder.class, encoders = MessageEncoder.class)
 public class WallboxServerEndpoint {
 
-	private HashMap<String, Session> sessions;
+	private Session session;
+	private static Set<WallboxServerEndpoint> wallboxServerEndpoints = new CopyOnWriteArraySet<>();
 	private Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
 
-
 	public WallboxServerEndpoint() {
-		this.sessions = new HashMap<String, Session>();
 	}
 
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
-		sessions.put(session.getId(), session);
+		this.session = session;
+		System.out.println("Socket Connected: " + session);
+		wallboxServerEndpoints.add(this);
+
+		WallboxInterfaceMessage message = new WallboxInterfaceMessage("Connected", "", MessageType.sessionStartReq);
+		broadcast(message);
 	}
 
 	@OnMessage
@@ -41,8 +58,8 @@ public class WallboxServerEndpoint {
 
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) throws IOException {
-		sessions.remove(session.getId());
-        getLogger().info(String.format("Session %s closed because of %s", session.getId(), closeReason));
+		wallboxServerEndpoints.remove(this);
+		getLogger().info(String.format("Session %s closed because of %s", session.getId(), closeReason));
 	}
 
 	@OnError
@@ -51,11 +68,19 @@ public class WallboxServerEndpoint {
 	}
 
 	public void sendDiscoveryReq(WallboxInterfaceMessage message) {
-		sendToAllSessions(message);
+		broadcast(message);
 	}
 
-	private void sendToAllSessions(WallboxInterfaceMessage message) {
-		sessions.forEach((k, v) -> v.getUserProperties().put(message.getMessageType().toString(), message));
+	private void broadcast(WallboxInterfaceMessage message) {
+		wallboxServerEndpoints.forEach(endpoint -> {
+			synchronized (endpoint) {
+				try {
+					endpoint.session.getBasicRemote().sendObject(message);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public Logger getLogger() {

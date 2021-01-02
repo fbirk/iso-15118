@@ -36,8 +36,6 @@ import com.v2gclarity.risev2g.secc.transportLayer.ConnectionHandler;
 import com.v2gclarity.risev2g.secc.transportLayer.TCPServer;
 import com.v2gclarity.risev2g.secc.transportLayer.TLSServer;
 import com.v2gclarity.risev2g.secc.transportLayer.UDPServer;
-import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.MessageType;
-import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WallboxInterfaceMessage;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WallboxServerEndpoint;
 import com.v2gclarity.risev2g.shared.enumerations.GlobalValues;
 import com.v2gclarity.risev2g.shared.messageHandling.MessageHandler;
@@ -47,6 +45,9 @@ import com.v2gclarity.risev2g.shared.misc.V2GTPMessage;
 import com.v2gclarity.risev2g.shared.utils.ByteUtils;
 import com.v2gclarity.risev2g.shared.v2gMessages.SECCDiscoveryReq;
 import com.v2gclarity.risev2g.shared.v2gMessages.SECCDiscoveryRes;
+
+import de.hsrm.cs.wallbox.shared.enums.MessageType;
+import de.hsrm.cs.wallbox.shared.models.WallboxInterfaceMessage;
 
 public class V2GCommunicationSessionHandlerSECC implements Observer {
 
@@ -168,6 +169,8 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				SECCDiscoveryReq seccDiscoveryReq = new SECCDiscoveryReq(getV2gTpMessage().getPayload());
 				setSecurity(seccDiscoveryReq.getSecurity());
 				getLogger().debug("SECCDiscoveryReq received");
+				wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("SECCDiscoveryReq received.", "Security: " + getSecurity(), MessageType.discoveryReq));
+
 				
 				/*
 				 * The TCP and TLS server ports are created upon initialization of the TCP/TLS server and will 

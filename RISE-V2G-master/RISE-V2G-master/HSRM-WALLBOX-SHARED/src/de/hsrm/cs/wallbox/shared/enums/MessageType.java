@@ -1,4 +1,4 @@
-package com.v2gclarity.risev2g.secc.wallboxServerEndpoint;
+package de.hsrm.cs.wallbox.shared.enums;
 
 public enum MessageType {
 	sessionStartReq,

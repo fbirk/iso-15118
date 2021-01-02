@@ -6,6 +6,8 @@ import javax.websocket.EndpointConfig;
 
 import com.google.gson.Gson;
 
+import de.hsrm.cs.wallbox.shared.models.WallboxInterfaceMessage;
+
 public class MessageEncoder implements Encoder.Text<WallboxInterfaceMessage> {
 
 	private static Gson gson = new Gson();

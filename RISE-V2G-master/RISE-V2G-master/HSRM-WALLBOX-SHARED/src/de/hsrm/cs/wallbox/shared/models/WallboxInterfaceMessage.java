@@ -1,4 +1,6 @@
-package com.v2gclarity.risev2g.secc.wallboxServerEndpoint;
+package de.hsrm.cs.wallbox.shared.models;
+
+import de.hsrm.cs.wallbox.shared.enums.MessageType;
 
 public class WallboxInterfaceMessage {
 
