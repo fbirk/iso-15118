@@ -1,5 +1,6 @@
 package com.v2gclarity.risev2g.secc.wallboxServerEndpoint;
 
+import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -9,6 +10,8 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.MeterInfoType;
 
 import de.hsrm.cs.wallbox.shared.enums.MessageType;
 import de.hsrm.cs.wallbox.shared.models.WallboxInterfaceMessage;
@@ -89,6 +92,24 @@ public class WallboxServerEndpoint {
 
 	public void setLogger(Logger logger) {
 		this.logger = logger;
+	}
+
+	public void sendChargingStatusRes(WallboxInterfaceMessage wallboxInterfaceMessage) {
+		broadcast(wallboxInterfaceMessage);		
+	}
+
+	public MeterInfoType getMeterInfo() {
+
+		Object task;
+		task.addEventHandler(TestEvent.RECEIVED, new EventHandler<TestEvent>() {
+			@Override
+			public void handle(TestEvent t) {
+				result = t.getValue();
+			}
+			
+		})
+
+		return new MeterInfoType();		
 	}
 
 }

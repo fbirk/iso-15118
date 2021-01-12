@@ -42,6 +42,7 @@ public class DummyACEVSEController implements IACEVSEController {
 	@SuppressWarnings("unused")
 	private V2GCommunicationSessionSECC commSessionContext;
 	
+	
 	public DummyACEVSEController() {
 	}
 	
@@ -107,11 +108,6 @@ public class DummyACEVSEController implements IACEVSEController {
 	
 	@Override
 	public MeterInfoType getMeterInfo() {
-		MeterInfoType meterInfo = new MeterInfoType();
-		meterInfo.setMeterID("1");
-		meterInfo.setMeterReading(BigInteger.valueOf(32000));
-		meterInfo.setTMeter(System.currentTimeMillis() / 1000);
-		
-		return meterInfo;
+		return commSessionContext.getWallboxServerEndpoint().getMeterInfo();
 	}
 }

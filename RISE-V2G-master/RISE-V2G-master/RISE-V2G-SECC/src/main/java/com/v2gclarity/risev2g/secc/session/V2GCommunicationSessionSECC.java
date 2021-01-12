@@ -54,6 +54,7 @@ import com.v2gclarity.risev2g.secc.states.WaitForSessionStopReq;
 import com.v2gclarity.risev2g.secc.states.WaitForSupportedAppProtocolReq;
 import com.v2gclarity.risev2g.secc.states.WaitForWeldingDetectionReq;
 import com.v2gclarity.risev2g.secc.transportLayer.ConnectionHandler;
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WallboxServerEndpoint;
 import com.v2gclarity.risev2g.shared.enumerations.GlobalValues;
 import com.v2gclarity.risev2g.shared.enumerations.V2GMessages;
 import com.v2gclarity.risev2g.shared.messageHandling.ChangeProcessingState;
@@ -102,9 +103,12 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 	private CertificateChainType contractSignatureCertChain;
 	private MeterInfoType sentMeterInfo;
 	private boolean chargeProgressStarted; // for checking [V2G2-812]
+	private WallboxServerEndpoint wallboxServerEndpoint;
 	
 	@SuppressWarnings("deprecation")
-	public V2GCommunicationSessionSECC(ConnectionHandler connectionHandler) {
+	public V2GCommunicationSessionSECC(ConnectionHandler connectionHandler, WallboxServerEndpoint wallboxServerEndpoint) {
+		this.setWallboxServerEndpoint(wallboxServerEndpoint);
+		
 		setConnectionHandler(connectionHandler);
 		
 		// Tell the respective ConnectionHandler to notify if a new V2GTPMessage has arrived (see update()-method)
@@ -124,7 +128,7 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 		getStates().put(V2GMessages.CABLE_CHECK_REQ, new WaitForCableCheckReq(this));
 		getStates().put(V2GMessages.PRE_CHARGE_REQ, new WaitForPreChargeReq(this));
 		getStates().put(V2GMessages.POWER_DELIVERY_REQ, new WaitForPowerDeliveryReq(this));
-		getStates().put(V2GMessages.CHARGING_STATUS_REQ, new WaitForChargingStatusReq(this));
+		getStates().put(V2GMessages.CHARGING_STATUS_REQ, new WaitForChargingStatusReq(this, wallboxServerEndpoint));
 		getStates().put(V2GMessages.CURRENT_DEMAND_REQ, new WaitForCurrentDemandReq(this));
 		getStates().put(V2GMessages.METERING_RECEIPT_REQ, new WaitForMeteringReceiptReq(this));
 		getStates().put(V2GMessages.WELDING_DETECTION_REQ, new WaitForWeldingDetectionReq(this));
@@ -491,5 +495,15 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 
 	public void setChargingSession(ChargingSessionType chargingSession) {
 		this.chargingSession = chargingSession;
+	}
+
+
+	public WallboxServerEndpoint getWallboxServerEndpoint() {
+		return wallboxServerEndpoint;
+	}
+
+
+	public void setWallboxServerEndpoint(WallboxServerEndpoint wallboxServerEndpoint) {
+		this.wallboxServerEndpoint = wallboxServerEndpoint;
 	}
 }

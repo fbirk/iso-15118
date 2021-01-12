@@ -124,7 +124,7 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				getLogger().debug("Initiating a new communication session ...");
 				wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Initializing new session.", ipAddress, MessageType.discoveryReq));
 
-				V2GCommunicationSessionSECC newSession = new V2GCommunicationSessionSECC((ConnectionHandler) obj);
+				V2GCommunicationSessionSECC newSession = new V2GCommunicationSessionSECC((ConnectionHandler) obj, wallboxServerEndpoint);
 				newSession.setTlsConnection((obs instanceof TLSServer) ? true : false);
 				newSession.addObserver(this);
 				getV2gCommunicationSessions().put(ipAddress, newSession);

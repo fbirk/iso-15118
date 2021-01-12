@@ -202,4 +202,25 @@ public class MeterInfoType {
         this.tMeter = value;
     }
 
+    @Override
+    public String toString() {
+    	String result = "";
+        if (getMeterID() != null && !getMeterID().isEmpty()) {
+        	result += "MeterID: " + getMeterID() + ";";
+        }
+        if (getMeterReading() != null && !getMeterReading().toString().isEmpty()) {
+        	result += "MeterReading: " + getMeterReading().toString() + "Wh;";
+        }
+        if (getSigMeterReading() != null && !getSigMeterReading().toString().isEmpty()) {
+        	result += "SigMeterReading: " + getSigMeterReading().toString() + ";";
+        }
+        if (getMeterStatus() != null && !getMeterStatus().toString().isEmpty()) {
+        	result += "MeterStatus: " + getMeterStatus().toString() + ";";
+        }
+        if (getTMeter() != null && !getTMeter().toString().isEmpty()) {
+        	result += "TMeter: " + getTMeter().toString() + ";";
+        }
+        
+		return result;
+    }
 }
