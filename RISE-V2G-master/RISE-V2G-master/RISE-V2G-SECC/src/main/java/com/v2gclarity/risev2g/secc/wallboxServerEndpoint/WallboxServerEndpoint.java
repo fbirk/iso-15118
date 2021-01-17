@@ -2,6 +2,7 @@ package com.v2gclarity.risev2g.secc.wallboxServerEndpoint;
 
 import java.beans.EventHandler;
 import java.io.IOException;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -11,7 +12,11 @@ import javax.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ACEVSEStatusType;
+import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EVSENotificationType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.MeterInfoType;
+import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.NotificationType;
+import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PhysicalValueType;
 
 import de.hsrm.cs.wallbox.shared.enums.MessageType;
 import de.hsrm.cs.wallbox.shared.models.WallboxInterfaceMessage;
@@ -30,8 +35,11 @@ public class WallboxServerEndpoint {
 	private Session session;
 	private static Set<WallboxServerEndpoint> wallboxServerEndpoints = new CopyOnWriteArraySet<>();
 	private Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
+	
+	private WallboxServerModelSingleton wallboxServerModelInstance;
 
 	public WallboxServerEndpoint() {
+		wallboxServerModelInstance = WallboxServerModelSingleton.getInstance();
 	}
 
 	@OnOpen
@@ -99,17 +107,24 @@ public class WallboxServerEndpoint {
 	}
 
 	public MeterInfoType getMeterInfo() {
+		Queue<MeterInfoType> meterInfoQueue = wallboxServerModelInstance.getMeterInfo();
+		if (meterInfoQueue.size() <= 1) {
+			return meterInfoQueue.peek();
+		}
+		
+		return wallboxServerModelInstance.getMeterInfo().poll();
+	}
 
-		Object task;
-		task.addEventHandler(TestEvent.RECEIVED, new EventHandler<TestEvent>() {
-			@Override
-			public void handle(TestEvent t) {
-				result = t.getValue();
-			}
-			
-		})
+	public PhysicalValueType getACNominalVoltage() {
+		return wallboxServerModelInstance.getACNominalVoltage();
+	}
 
-		return new MeterInfoType();		
+	public PhysicalValueType getMaxCurrent() {
+		return wallboxServerModelInstance.getMaxCurrent();
+	}
+
+	public EVSENotificationType getEVSENotificationType() {
+		return wallboxServerModelInstance.getEvseNotificationType();
 	}
 
 }

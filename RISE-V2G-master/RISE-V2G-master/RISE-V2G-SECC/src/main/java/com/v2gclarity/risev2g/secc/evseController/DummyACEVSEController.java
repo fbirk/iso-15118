@@ -23,23 +23,18 @@
  *******************************************************************************/
 package com.v2gclarity.risev2g.secc.evseController;
 
-import java.math.BigInteger;
-
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import com.v2gclarity.risev2g.secc.session.V2GCommunicationSessionSECC;
-import com.v2gclarity.risev2g.shared.utils.ByteUtils;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ACEVSEChargeParameterType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ACEVSEStatusType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EVSENotificationType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.MeterInfoType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PhysicalValueType;
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.UnitSymbolType;
 
 public class DummyACEVSEController implements IACEVSEController {
 
-	@SuppressWarnings("unused")
 	private V2GCommunicationSessionSECC commSessionContext;
 	
 	
@@ -55,19 +50,13 @@ public class DummyACEVSEController implements IACEVSEController {
 	public JAXBElement<ACEVSEChargeParameterType> getACEVSEChargeParameter() {
 		ACEVSEChargeParameterType acEVSEChargeParameter = new ACEVSEChargeParameterType();
 		
-		PhysicalValueType evseNominalVoltage = new PhysicalValueType();
-		evseNominalVoltage.setMultiplier((byte) 0);
-		evseNominalVoltage.setUnit(UnitSymbolType.V);
-		evseNominalVoltage.setValue((short) 230);
+		PhysicalValueType evseNominalVoltage = commSessionContext.getWallboxServerEndpoint().getACNominalVoltage();
 		acEVSEChargeParameter.setEVSENominalVoltage(evseNominalVoltage);
 		
-		PhysicalValueType evseMaxCurrent = new PhysicalValueType();
-		evseMaxCurrent.setMultiplier(ByteUtils.toByteFromHexString("00"));
-		evseMaxCurrent.setUnit(UnitSymbolType.A);
-		evseMaxCurrent.setValue((short) 32);
+		PhysicalValueType evseMaxCurrent = commSessionContext.getWallboxServerEndpoint().getMaxCurrent();
 		acEVSEChargeParameter.setEVSEMaxCurrent(evseMaxCurrent);
 		
-		acEVSEChargeParameter.setACEVSEStatus(getACEVSEStatus(EVSENotificationType.NONE));
+		acEVSEChargeParameter.setACEVSEStatus(getACEVSEStatus(commSessionContext.getWallboxServerEndpoint().getEVSENotificationType()));
 		
 		return new JAXBElement<ACEVSEChargeParameterType>(
 				new QName("urn:iso:15118:2:2013:MsgDataTypes", "AC_EVSEChargeParameter"),
