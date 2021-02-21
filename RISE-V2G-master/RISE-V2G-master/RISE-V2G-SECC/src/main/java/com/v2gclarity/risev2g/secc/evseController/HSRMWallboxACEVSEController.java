@@ -33,12 +33,12 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EVSENotificationType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.MeterInfoType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PhysicalValueType;
 
-public class DummyACEVSEController implements IACEVSEController {
+public class HSRMWallboxACEVSEController implements IACEVSEController {
 
 	private V2GCommunicationSessionSECC commSessionContext;
 	
 	
-	public DummyACEVSEController() {
+	public HSRMWallboxACEVSEController() {
 	}
 	
 	@Override

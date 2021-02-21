@@ -46,9 +46,6 @@ import com.v2gclarity.risev2g.shared.utils.ByteUtils;
 import com.v2gclarity.risev2g.shared.v2gMessages.SECCDiscoveryReq;
 import com.v2gclarity.risev2g.shared.v2gMessages.SECCDiscoveryRes;
 
-import de.hsrm.cs.wallbox.shared.enums.MessageType;
-import de.hsrm.cs.wallbox.shared.models.WallboxInterfaceMessage;
-
 public class V2GCommunicationSessionHandlerSECC implements Observer {
 
 	private Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
@@ -109,7 +106,7 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				 * race conditions. 
 				 */
 				getLogger().debug("Resuming previous communication session ...");
-				wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Resuming session.", ipAddress, MessageType.discoveryReq));
+				// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Resuming session.", ipAddress, MessageType.discoveryReq));
 				V2GCommunicationSessionSECC continuedSession = getV2gCommunicationSessions().get(ipAddress);
 				
 				// Reset charging session state from previous session (namely ChargingSessionType.PAUSE) to avoid confusion in the algorithm
@@ -122,7 +119,7 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				manageConnectionHandlers((ConnectionHandler) obj);
 			} else { 
 				getLogger().debug("Initiating a new communication session ...");
-				wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Initializing new session.", ipAddress, MessageType.discoveryReq));
+				// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Initializing new session.", ipAddress, MessageType.discoveryReq));
 
 				V2GCommunicationSessionSECC newSession = new V2GCommunicationSessionSECC((ConnectionHandler) obj, wallboxServerEndpoint);
 				newSession.setTlsConnection((obs instanceof TLSServer) ? true : false);
@@ -136,11 +133,11 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 			String ipAddress = ((V2GCommunicationSessionSECC) obs).getConnectionHandler().getAddress();
 			getV2gCommunicationSessions().remove(ipAddress);
 			
-			wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Stopping session.", ipAddress, MessageType.discoveryReq));
+			// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Stopping session.", ipAddress, MessageType.discoveryReq));
 			
 			stopConnectionHandler(((V2GCommunicationSessionSECC) obs).getConnectionHandler(), false);
 		} else if (obs instanceof V2GCommunicationSessionSECC && obj instanceof PauseSession) {
-			wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Pausing session.", "", MessageType.discoveryReq));
+			// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Pausing session.", "", MessageType.discoveryReq));
 
 			// Stop the connection handler, but keep the V2GCommunicationSessionSECC instance in the hash map
 			stopConnectionHandler(((V2GCommunicationSessionSECC) obs).getConnectionHandler(), true);
@@ -169,7 +166,7 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				SECCDiscoveryReq seccDiscoveryReq = new SECCDiscoveryReq(getV2gTpMessage().getPayload());
 				setSecurity(seccDiscoveryReq.getSecurity());
 				getLogger().debug("SECCDiscoveryReq received");
-				wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("SECCDiscoveryReq received.", "Security: " + getSecurity(), MessageType.discoveryReq));
+				// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("SECCDiscoveryReq received.", "Security: " + getSecurity(), MessageType.discoveryReq));
 
 				
 				/*

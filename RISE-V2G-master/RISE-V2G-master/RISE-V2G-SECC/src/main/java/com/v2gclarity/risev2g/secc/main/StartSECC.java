@@ -30,7 +30,6 @@ import com.v2gclarity.risev2g.secc.transportLayer.TCPServer;
 import com.v2gclarity.risev2g.secc.transportLayer.TLSServer;
 import com.v2gclarity.risev2g.secc.transportLayer.UDPServer;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WallboxServerEndpoint;
-import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WebsocketServer;
 import com.v2gclarity.risev2g.shared.enumerations.GlobalValues;
 import com.v2gclarity.risev2g.shared.utils.MiscUtils;
 
@@ -43,7 +42,7 @@ public class StartSECC {
 		UDPServer udpServer = UDPServer.getInstance();
 		TCPServer tcpServer = TCPServer.getInstance();
 		TLSServer tlsServer = TLSServer.getInstance();
-		WebsocketServer websocketServer = WebsocketServer.getInstance();
+		// WebsocketServer websocketServer = WebsocketServer.getInstance();
 		
 		if (!udpServer.initialize() || !tlsServer.initialize() || !tcpServer.initialize()) {
 			logger.fatal("Unable to start SECC because UDP, TCP or TLS server could not be initialized");
@@ -57,8 +56,8 @@ public class StartSECC {
 			Thread tlsServerThread = new Thread(tlsServer);
 			tlsServerThread.setName("TLSServerThread");
 			
-			Thread websocketServerThread = new Thread(websocketServer);
-			websocketServerThread.setName("WebsocketServerThread");
+			//Thread websocketServerThread = new Thread(websocketServer);
+			//websocketServerThread.setName("WebsocketServerThread");
 			
 			// Initialize the server end-point to the HSRM Wallbox  
 			WallboxServerEndpoint wallboxServerEndpoint = new WallboxServerEndpoint();
@@ -75,7 +74,7 @@ public class StartSECC {
 			udpServerThread.start();
 			tcpServerThread.start();
 			tlsServerThread.start();
-			websocketServerThread.start();
+			//websocketServerThread.start();
 		} 
 	}
 }

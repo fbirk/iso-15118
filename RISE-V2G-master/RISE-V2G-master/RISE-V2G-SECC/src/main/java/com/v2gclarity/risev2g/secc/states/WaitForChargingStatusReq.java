@@ -35,9 +35,6 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.MeterInfoType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PaymentOptionType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ResponseCodeType;
 
-import de.hsrm.cs.wallbox.shared.enums.MessageType;
-import de.hsrm.cs.wallbox.shared.models.WallboxInterfaceMessage;
-
 public class WaitForChargingStatusReq extends ServerState {
 
 	private ChargingStatusResType chargingStatusRes;
@@ -80,7 +77,7 @@ public class WaitForChargingStatusReq extends ServerState {
 			chargingStatusRes.setMeterInfo(meterInfo);
 			getCommSessionContext().setSentMeterInfo(meterInfo);
 			
-			wallboxEndpoint.sendChargingStatusRes(new WallboxInterfaceMessage("Meter Info", meterInfo.toString(),MessageType.meterInfoRes));
+			//wallboxEndpoint.sendChargingStatusRes(new WallboxInterfaceMessage("Meter Info", meterInfo.toString(),MessageType.meterInfoRes));
 						
 			/*
 			 * TODO it is unclear how the EV should react if an EVSENotification = Renegotiate/Stop

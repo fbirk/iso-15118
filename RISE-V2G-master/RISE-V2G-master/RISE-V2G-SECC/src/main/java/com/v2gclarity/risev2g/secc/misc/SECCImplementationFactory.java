@@ -25,7 +25,7 @@ package com.v2gclarity.risev2g.secc.misc;
 
 import com.v2gclarity.risev2g.secc.backend.DummyBackendInterface;
 import com.v2gclarity.risev2g.secc.backend.IBackendInterface;
-import com.v2gclarity.risev2g.secc.evseController.DummyACEVSEController;
+import com.v2gclarity.risev2g.secc.evseController.HSRMWallboxACEVSEController;
 import com.v2gclarity.risev2g.secc.evseController.DummyDCEVSEController;
 import com.v2gclarity.risev2g.secc.evseController.IACEVSEController;
 import com.v2gclarity.risev2g.secc.evseController.IDCEVSEController;
@@ -61,7 +61,7 @@ public class SECCImplementationFactory extends V2GImplementationFactory {
 	public static IACEVSEController createACEVSEController(V2GCommunicationSessionSECC commSessionContext) {
 		IACEVSEController instance = buildFromProperties("implementation.secc.acevsecontroller", IACEVSEController.class);
 		if (instance == null) {
-			instance = new DummyACEVSEController();
+			instance = new HSRMWallboxACEVSEController();
 		}
 		instance.setCommSessionContext(commSessionContext);
 		return instance;

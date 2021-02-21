@@ -13,21 +13,57 @@
 	<artifactId>rise-v2g-secc</artifactId>
 	<name>rise-v2g-secc</name>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.glassfish.jersey</groupId>
+				<artifactId>jersey-bom</artifactId>
+				<version>3.0.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
 		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>javax-websocket-server-impl</artifactId>
-			<version>9.4.35.v20201120</version>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>2.12.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-joda -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>2.12.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-server</artifactId>
-			<version>9.4.35.v20201120</version>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.websocket</groupId>
-			<artifactId>javax.websocket-api</artifactId>
-			<version>1.1</version>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-jaxrs</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-grizzly2-http</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -115,6 +151,33 @@
 									</includes>
 								</resource>
 							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin> <!-- Generates the OpenAPI Server Stub -->
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<!-- RELEASE_VERSION -->
+				<version>5.0.1</version>
+				<!-- /RELEASE_VERSION -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<invokerPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.api</invokerPackage>
+							<modelPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.model</modelPackage>
+							<groupId>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest</groupId>
+							<apiPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest</apiPackage>
+							<inputSpec>${project.basedir}/src/main/resources/hsrm-wallbox-api.yaml</inputSpec>
+							<generatorName>jaxrs-jersey</generatorName>
+							<skipOverwrite>true</skipOverwrite>
+							<configOptions>
+								<implFolder>../../../src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/</implFolder>
+								<sourceFolder>../../../src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/</sourceFolder>
+							</configOptions>
 						</configuration>
 					</execution>
 				</executions>
