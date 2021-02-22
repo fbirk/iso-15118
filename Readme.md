@@ -2,7 +2,7 @@
 
 ## Inhalt
 
-{:toc}
+[[_TOC_]]
 
 ## Setup
 
