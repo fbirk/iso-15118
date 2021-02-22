@@ -40,7 +40,6 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
-			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -167,16 +166,23 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<invokerPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.api</invokerPackage>
-							<modelPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.model</modelPackage>
-							<groupId>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest</groupId>
-							<apiPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest</apiPackage>
+							<!-- The OpenApi specification yaml source file -->
 							<inputSpec>${project.basedir}/src/main/resources/hsrm-wallbox-api.yaml</inputSpec>
+							<!-- root output folder of all generated sources (src instead of target) -->
+							<output>${project.basedir}</output>
+							<!-- Declaration of namespaces of the packages -->
+							<invokerPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi</invokerPackage>
+							<modelPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model</modelPackage>
+							<groupId>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi</groupId>
+							<packageName>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi</packageName>
+							<apiPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi</apiPackage>
+							<!-- The openapi generator name (in this case jaxrs-jersey for a jersey server stub) -->
 							<generatorName>jaxrs-jersey</generatorName>
+							<!-- Overwrite previously generated files -->
 							<skipOverwrite>true</skipOverwrite>
 							<configOptions>
-								<implFolder>../../../src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/</implFolder>
-								<sourceFolder>../../../src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/</sourceFolder>
+								<!-- the root src folder in the output folder -->
+								<sourceFolder>src/main/java/</sourceFolder>
 							</configOptions>
 						</configuration>
 					</execution>
