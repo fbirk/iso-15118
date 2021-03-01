@@ -25,6 +25,38 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+		<!-- Dependencies for the jetty/jersey REST server -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>11.0.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlet -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlet</artifactId>
+			<version>11.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-jetty-http</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-moxy</artifactId>
+			<version>3.0.1</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
@@ -176,7 +208,8 @@
 							<groupId>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi</groupId>
 							<packageName>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi</packageName>
 							<apiPackage>com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi</apiPackage>
-							<!-- The openapi generator name (in this case jaxrs-jersey for a jersey server stub) -->
+							<!-- The openapi generator name (in this case jaxrs-jersey for a jersey 
+								server stub) -->
 							<generatorName>jaxrs-jersey</generatorName>
 							<!-- Overwrite previously generated files -->
 							<skipOverwrite>true</skipOverwrite>
