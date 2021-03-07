@@ -45,7 +45,7 @@ public class StartSECC {
 		TLSServer tlsServer = TLSServer.getInstance();
 		RestAPIServer restServer = RestAPIServer.getInstance();
 		
-		if (!udpServer.initialize() || !tlsServer.initialize() || !tcpServer.initialize()) {
+		if (!udpServer.initialize() || !tlsServer.initialize() || !tcpServer.initialize() || !restServer.initialize()) {
 			logger.fatal("Unable to start SECC because UDP, TCP or TLS server could not be initialized");
 		} else {
 			Thread udpServerThread = new Thread(udpServer);
