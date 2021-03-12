@@ -17,9 +17,10 @@ import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.Communicat
  * @author Fabian Birk
  *
  */
+@SuppressWarnings("unused")
 public class RestAPIServer extends Observable implements Runnable {
 
-	//private Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
+	private Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
 	private static final RestAPIServer uniqueRestServerInstance = new RestAPIServer();
 	private ServletContextHandler context;
 	private Server jettyServer;
@@ -35,27 +36,40 @@ public class RestAPIServer extends Observable implements Runnable {
 	public void run() {
 		context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
+		context.setWelcomeFiles(new String[] { "index.html", "index.htm", "index.jsp" });
 
 		jettyServer = new Server(8080);
 		jettyServer.setHandler(context);
 
 		ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+		jerseyServlet.setInitParameter("resourceBase", "/");
+		jerseyServlet.setInitParameter("dirAllowed", "true");
 		jerseyServlet.setInitOrder(0);
+		
+		getLogger().info("Serving at.." + jerseyServlet.getSource());
 
 		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", CommunicationSessionApi.class.getCanonicalName());
 		
 		try {
 			jettyServer.start();
 			
-			//getLogger().info("Rest server started at port 8080.");
+			getLogger().info("Rest server started at port 8080.");
 			
 			jettyServer.join();
 		} catch(Exception e) {
-			//getLogger().error("Jetty Server Exception", e);
+			getLogger().error("Jetty Server Exception", e);
 		}
 		finally {
 			jettyServer.destroy();
 		}
+	}
+
+	private Logger getLogger() {
+		return logger;
+	}
+
+	private void setLogger(Logger logger) {
+		this.logger = logger;
 	}
 
 }
