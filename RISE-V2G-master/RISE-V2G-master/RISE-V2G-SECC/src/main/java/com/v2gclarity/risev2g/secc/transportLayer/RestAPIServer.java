@@ -36,18 +36,16 @@ public class RestAPIServer extends Observable implements Runnable {
 	public void run() {
 		context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
+		context.setResourceBase(System.getProperty("user.dir"));
 		context.setWelcomeFiles(new String[] { "index.html", "index.htm", "index.jsp" });
 
 		jettyServer = new Server(8080);
 		jettyServer.setHandler(context);
 
 		ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
-		jerseyServlet.setInitParameter("resourceBase", "/");
 		jerseyServlet.setInitParameter("dirAllowed", "true");
 		jerseyServlet.setInitOrder(0);
 		
-		getLogger().info("Serving at.." + jerseyServlet.getSource());
-
 		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", CommunicationSessionApi.class.getCanonicalName());
 		
 		try {

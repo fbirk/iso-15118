@@ -20,7 +20,7 @@ import java.io.InputStream;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-02-22T09:14:36.215937400+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-13T10:53:55.059056300+01:00[Europe/Berlin]")
 public abstract class CommunicationSessionApiService {
     public abstract Response addCommunicationSession(OfferedServices body,SecurityContext securityContext) throws NotFoundException;
     public abstract Response communicationSessionSessionIdChargeParameterGet(String sessionId,SecurityContext securityContext) throws NotFoundException;
@@ -29,4 +29,5 @@ public abstract class CommunicationSessionApiService {
     public abstract Response communicationSessionSessionIdScheduleGet(String sessionId,SecurityContext securityContext) throws NotFoundException;
     public abstract Response communicationSessionSessionIdStatusGet(String sessionId,SecurityContext securityContext) throws NotFoundException;
     public abstract Response communicationSessionSessionIdStatusPut(String sessionId,InlineObject inlineObject,SecurityContext securityContext) throws NotFoundException;
+    public abstract Response getTest(SecurityContext securityContext) throws NotFoundException;
 }

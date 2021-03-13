@@ -33,7 +33,7 @@ import javax.validation.Valid;
   OfferedServices.JSON_PROPERTY_PAYMENT_OPTIONS,
   OfferedServices.JSON_PROPERTY_VALUE_ADDED_SERVICES
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-02-22T09:14:36.215937400+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-13T10:53:55.059056300+01:00[Europe/Berlin]")
 public class OfferedServices   {
   /**
    * Gets or Sets energyTransferModes

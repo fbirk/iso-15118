@@ -35,7 +35,7 @@ import javax.validation.Valid;
 
 
 @io.swagger.annotations.Api(description = "the communication-session API")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-02-22T09:14:36.215937400+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-13T10:53:55.059056300+01:00[Europe/Berlin]")
 public class CommunicationSessionApi  {
    private final CommunicationSessionApiService delegate;
 
@@ -172,5 +172,23 @@ public class CommunicationSessionApi  {
     public Response communicationSessionSessionIdStatusPut(@ApiParam(value = "The id of the V2G communication session.", required = true) @PathParam("session-id") @NotNull  String sessionId,@ApiParam(value = "") @Valid  InlineObject inlineObject,@Context SecurityContext securityContext)
     throws NotFoundException {
         return delegate.communicationSessionSessionIdStatusPut(sessionId, inlineObject, securityContext);
+    }
+    @GET
+    @Path("/test")
+    
+    @Produces({ "application/xml", "application/json" })
+    @io.swagger.annotations.ApiOperation(value = "Test the API connection", notes = "", response = String.class, authorizations = {
+        @io.swagger.annotations.Authorization(value = "petstore_auth", scopes = {
+            @io.swagger.annotations.AuthorizationScope(scope = "write:pets", description = "modify pets in your account"),
+            @io.swagger.annotations.AuthorizationScope(scope = "read:pets", description = "read your pets")
+        })
+    }, tags={ "test", })
+    @io.swagger.annotations.ApiResponses(value = {
+        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = String.class),
+        @io.swagger.annotations.ApiResponse(code = 200, message = "unexpected error", response = Error.class)
+    })
+    public Response getTest(@Context SecurityContext securityContext)
+    throws NotFoundException {
+        return delegate.getTest(securityContext);
     }
 }
