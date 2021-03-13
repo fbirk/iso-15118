@@ -16,12 +16,38 @@ externalDocs:
   description: For further documentation view the project-wiki (VPN connection is needed)
   url: 'https://10.18.205.252/doku.php?id=start&do=index'
 servers:
-  - url: 'https://localhost/'
-  - url: 'http://localhost/'
+  - url: 'http://localhost:8080/'
 tags:
   - name: communication-session
     description: A ISO-15118 communication session
 paths:
+  /communication-session/test:
+    get:
+      tags:
+        - test
+      summary: Test the API connection
+      operationId: getTest
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SessionId'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionId'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+      x-codegen-request-body-name: body
   /communication-session:
     post:
       tags:
