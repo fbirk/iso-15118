@@ -16,6 +16,7 @@ package com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.Status;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -23,60 +24,60 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 
 /**
- * Error
+ * InlineResponse200
  */
 @JsonPropertyOrder({
-  Error.JSON_PROPERTY_CODE,
-  Error.JSON_PROPERTY_MESSAGE
+  InlineResponse200.JSON_PROPERTY_ID,
+  InlineResponse200.JSON_PROPERTY_STATUS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-14T10:53:36.676157800+01:00[Europe/Berlin]")
-public class Error   {
-  public static final String JSON_PROPERTY_CODE = "code";
-  @JsonProperty(JSON_PROPERTY_CODE)
-  private Integer code;
+public class InlineResponse200   {
+  public static final String JSON_PROPERTY_ID = "id";
+  @JsonProperty(JSON_PROPERTY_ID)
+  private String id;
 
-  public static final String JSON_PROPERTY_MESSAGE = "message";
-  @JsonProperty(JSON_PROPERTY_MESSAGE)
-  private String message;
+  public static final String JSON_PROPERTY_STATUS = "status";
+  @JsonProperty(JSON_PROPERTY_STATUS)
+  private Status status;
 
-  public Error code(Integer code) {
-    this.code = code;
+  public InlineResponse200 id(String id) {
+    this.id = id;
     return this;
   }
 
   /**
-   * Get code
-   * @return code
+   * This message element is used by EVCC and SECC for uniquely identifying a V2G communication session. See section 8.4.2 of the ISO-15118-2 document for further information.
+   * @return id
    **/
-  @JsonProperty("code")
-  @ApiModelProperty(required = true, value = "")
-  @NotNull 
-  public Integer getCode() {
-    return code;
+  @JsonProperty("id")
+  @ApiModelProperty(value = "This message element is used by EVCC and SECC for uniquely identifying a V2G communication session. See section 8.4.2 of the ISO-15118-2 document for further information.")
+  
+  public String getId() {
+    return id;
   }
 
-  public void setCode(Integer code) {
-    this.code = code;
+  public void setId(String id) {
+    this.id = id;
   }
 
-  public Error message(String message) {
-    this.message = message;
+  public InlineResponse200 status(Status status) {
+    this.status = status;
     return this;
   }
 
   /**
-   * Get message
-   * @return message
+   * Get status
+   * @return status
    **/
-  @JsonProperty("message")
-  @ApiModelProperty(required = true, value = "")
-  @NotNull 
-  public String getMessage() {
-    return message;
+  @JsonProperty("status")
+  @ApiModelProperty(value = "")
+  @Valid 
+  public Status getStatus() {
+    return status;
   }
 
-  public void setMessage(String message) {
-    this.message = message;
+  public void setStatus(Status status) {
+    this.status = status;
   }
 
 
@@ -88,24 +89,24 @@ public class Error   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Error error = (Error) o;
-    return Objects.equals(this.code, error.code) &&
-        Objects.equals(this.message, error.message);
+    InlineResponse200 inlineResponse200 = (InlineResponse200) o;
+    return Objects.equals(this.id, inlineResponse200.id) &&
+        Objects.equals(this.status, inlineResponse200.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message);
+    return Objects.hash(id, status);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Error {\n");
+    sb.append("class InlineResponse200 {\n");
     
-    sb.append("    code: ").append(toIndentedString(code)).append("\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();
   }

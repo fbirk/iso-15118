@@ -48,6 +48,8 @@ public class HSRMWallboxACEVSEController implements IACEVSEController {
 
 	@Override
 	public JAXBElement<ACEVSEChargeParameterType> getACEVSEChargeParameter() {
+		commSessionContext.getStates()
+		
 		ACEVSEChargeParameterType acEVSEChargeParameter = new ACEVSEChargeParameterType();
 		
 		PhysicalValueType evseNominalVoltage = commSessionContext.getWallboxServerEndpoint().getACNominalVoltage();
