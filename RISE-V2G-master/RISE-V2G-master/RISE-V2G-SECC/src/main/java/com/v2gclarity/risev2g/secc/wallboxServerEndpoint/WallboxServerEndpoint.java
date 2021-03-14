@@ -17,13 +17,14 @@ import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.Phys
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.PhysicalValueType.UnitEnum;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.SASchedule;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.Status;
+import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.UnitSymbolType;
 
 public class WallboxServerEndpoint extends CommunicationSessionApiService {
 
 	private Hashtable<String, WallboxDAO> sessions;
 
 	public WallboxServerEndpoint() {
-		setSessions(new Hashtable<String, WallboxDAO>());
+		sessions = new Hashtable<String, WallboxDAO>();
 	}
 
 	public void sendMessage(String string) {
@@ -40,14 +41,14 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 	public Response findCommunicationSessionByStatus(Status status, SecurityContext securityContext)
 			throws NotFoundException {
 
-		if (getSessions().isEmpty()) {
+		if (sessions.isEmpty()) {
 			throw new NotFoundException(400,
 					"The communication sessions list is empty! No active sessions were found.");
 		}
 
 		// get all sessions with given status, retrieve the session-id's, convert to
 		// list
-		List<String> list = getSessions().entrySet().stream().filter(x -> x.getValue().getStatus().equals(status))
+		List<String> list = sessions.entrySet().stream().filter(x -> x.getValue().getStatus().equals(status))
 				.map(val -> val.getKey()).collect(Collectors.toList());
 
 		return Response.ok().entity(list).build();
@@ -56,11 +57,11 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 	@Override
 	public Response communicationSessionSessionIdChargeParameterGet(String sessionId, SecurityContext securityContext)
 			throws NotFoundException {
-		if (!getSessions().containsKey(sessionId)) {
+		if (!sessions.containsKey(sessionId)) {
 			throw new NotFoundException(400, "No session was found with id " + sessionId);
 		}
 
-		WallboxDAO dao = getSessions().get(sessionId);
+		WallboxDAO dao = sessions.get(sessionId);
 		ChargeParameter param = new ChargeParameter();
 
 		if (dao.isAC()) {
@@ -90,23 +91,37 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 	@Override
 	public Response communicationSessionSessionIdChargeParameterPost(String sessionId, ChargeParameter body,
 			SecurityContext securityContext) throws NotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+
+		if (!sessions.contains(sessionId)) {
+			throw new NotFoundException(400, "No session was found with id " + sessionId);
+		}
+
+		WallboxDAO dao = sessions.get(sessionId);
+		dao.setACNominalVoltage(ConvertToRISEPhysicalValueType(body.getAcChargeParameter().getNominalVoltage()));
+		dao.setMaxCurrent(ConvertToRISEPhysicalValueType(body.getAcChargeParameter().getMaxCurrent()));
+
+		dao.setMaxPower(ConvertToRISEPhysicalValueType(body.getDcChargeParameter().getMaxPowerLimit()));
+		dao.setMaxVoltage(ConvertToRISEPhysicalValueType(body.getDcChargeParameter().getMaxVoltageLimit()));
+		dao.setMinCurrent(ConvertToRISEPhysicalValueType(body.getDcChargeParameter().getMinCurrentLimit()));
+		dao.setMinVoltage(ConvertToRISEPhysicalValueType(body.getDcChargeParameter().getMinVoltageLimit()));
+		dao.setRipple(ConvertToRISEPhysicalValueType(body.getDcChargeParameter().getPeakCurrentRipple()));
+
+		return Response.ok().build();
 	}
 
 	@Override
 	public Response communicationSessionSessionIdChargeParameterPut(String sessionId, ChargeParameter body,
 			SecurityContext securityContext) throws NotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		return communicationSessionSessionIdChargeParameterPost(sessionId, body, securityContext);
+		// TODO ??
 	}
 
 	@Override
 	public Response communicationSessionSessionIdScheduleGet(String sessionId, SecurityContext securityContext)
 			throws NotFoundException {
-		if (getSessions().containsKey(sessionId)) {
+		if (sessions.containsKey(sessionId)) {
 			try {
-				WallboxDAO dao = getSessions().get(sessionId);
+				WallboxDAO dao = sessions.get(sessionId);
 
 				SASchedule schedule = new SASchedule();
 
@@ -123,31 +138,28 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 	@Override
 	public Response communicationSessionSessionIdStatusGet(String sessionId, SecurityContext securityContext)
 			throws NotFoundException {
-		if (!getSessions().containsKey(sessionId)) {
+		if (!sessions.containsKey(sessionId)) {
 			throw new NotFoundException(400, "No session was found with id " + sessionId);
 		}
-		
-		return Response.ok().entity(getSessions().get(sessionId).getStatus()).build();
+
+		return Response.ok().entity(sessions.get(sessionId).getStatus()).build();
 	}
 
 	@Override
 	public Response communicationSessionSessionIdStatusPut(String sessionId, InlineObject inlineObject,
 			SecurityContext securityContext) throws NotFoundException {
-		// TODO Auto-generated method stub
+		if (!sessions.containsKey(sessionId)) {
+			throw new NotFoundException(400, "No session was found with id " + sessionId);
+		}
+
+		// TODO
+
 		return null;
 	}
 
 	@Override
 	public Response getTest(SecurityContext securityContext) throws NotFoundException {
 		return Response.ok().entity("Success!").build();
-	}
-
-	public Hashtable<String, WallboxDAO> getSessions() {
-		return sessions;
-	}
-
-	public void setSessions(Hashtable<String, WallboxDAO> hashtable) {
-		this.sessions = hashtable;
 	}
 
 	/**
@@ -167,13 +179,26 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 
 		return wallboxAPIType;
 	}
-	
+
+	private com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PhysicalValueType ConvertToRISEPhysicalValueType(
+			PhysicalValueType wallboxAPIType) {
+
+		com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PhysicalValueType valueType = new com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PhysicalValueType();
+
+		valueType.setMultiplier(wallboxAPIType.getMultiplier().byteValue());
+		valueType.setUnit(UnitSymbolType.fromValue(wallboxAPIType.getUnit().name()));
+		valueType.setValue(wallboxAPIType.getValue().shortValue());
+
+		return valueType;
+	}
+
 	/**
 	 * Returns the data object of given communication session
+	 * 
 	 * @param sessionID the ID which identifies a communication session
 	 * @return a WallboxDAO object
 	 */
 	public WallboxDAO getWallboxDAO(String sessionID) {
-		return getSessions().get(sessionID);
+		return sessions.get(sessionID);
 	}
 }
