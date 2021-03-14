@@ -30,7 +30,7 @@ import javax.validation.Valid;
   ChargeParameterAcChargeParameter.JSON_PROPERTY_NOMINAL_VOLTAGE,
   ChargeParameterAcChargeParameter.JSON_PROPERTY_MAX_CURRENT
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-02-22T09:14:36.215937400+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-14T10:53:36.676157800+01:00[Europe/Berlin]")
 public class ChargeParameterAcChargeParameter   {
   public static final String JSON_PROPERTY_NOMINAL_VOLTAGE = "nominal-voltage";
   @JsonProperty(JSON_PROPERTY_NOMINAL_VOLTAGE)

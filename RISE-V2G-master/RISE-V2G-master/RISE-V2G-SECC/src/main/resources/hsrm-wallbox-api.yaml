@@ -16,28 +16,17 @@ externalDocs:
   description: For further documentation view the project-wiki (VPN connection is needed)
   url: 'https://10.18.205.252/doku.php?id=start&do=index'
 servers:
-  - url: 'https://localhost/'
-  - url: 'http://localhost/'
+  - url: 'http://localhost:8080/'
 tags:
   - name: communication-session
     description: A ISO-15118 communication session
 paths:
-  /communication-session:
-    post:
+  /communication-session/test:
+    get:
       tags:
-        - communication-session
-      summary: Generate a new communication session
-      operationId: addCommunicationSession
-      requestBody:
-        description: Overview of services the EVSE offers.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Offered-Services'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Offered-Services'
-        required: true
+        - test
+      summary: Test the API connection
+      operationId: getTest
       responses:
         '200':
           description: successful operation
@@ -48,7 +37,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionId'
-        default:
+        '400':
           description: unexpected error
           content:
             application/json:
@@ -59,6 +48,76 @@ paths:
             - 'write:pets'
             - 'read:pets'
       x-codegen-request-body-name: body
+  /communication-session:
+    get:
+      tags:
+        - communication-session
+      summary: Generate a new communication session
+      operationId: addCommunicationSession
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SessionId'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionId'
+        '400':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+      x-codegen-request-body-name: body
+  /communication-session/findByStatus:
+    get:
+      tags:
+      - communication-session
+      summary: "Finds Sessions by their status"
+      description: "Multiple status values can be provided with comma separated strings"
+      operationId: "findCommunicationSessionByStatus"
+      parameters:
+      - name: status
+        in: query
+        description: Status values that need to be considered for filter
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/Status'
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      $ref: '#/components/schemas/SessionId'
+                    status:
+                      $ref: '#/components/schemas/Status'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionId'
+        '400':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
   /communication-session/{session-id}/charge-parameter:
     get: 
       tags:
@@ -81,7 +140,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/Charge-Parameter'
-        default:
+        '400':
           description: unexpected error
           content:
             application/json:
@@ -114,7 +173,7 @@ paths:
               $ref: '#/components/schemas/Charge-Parameter'
         required: true
       responses:
-        default:
+        '400':
           description: unexpected error
           content:
             application/json:
@@ -147,7 +206,7 @@ paths:
               $ref: '#/components/schemas/Charge-Parameter'
         required: true
       responses:
-        default:
+        '400':
           description: unexpected error
           content:
             application/json:
@@ -180,7 +239,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/SASchedule'
-        default:
+        '400':
           description: unexpected error
           content:
             application/json:
@@ -210,7 +269,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Status"
-        default:
+        '400':
           description: unexpected error
           content:
             application/json:
@@ -244,7 +303,7 @@ paths:
                     seconds:
                       type: integer
       responses:
-        default:
+        '400':
           description: unexpected error
           content:
             application/json:
@@ -262,50 +321,6 @@ components:
         - Charging
         - Paused
         - Stoped
-    Offered-Services:
-      required:
-        - energy_transfer_modes
-        - payment_option
-      type: object
-      properties:
-        energy_transfer_modes:
-          type: array
-          items:
-            type: string
-            enum:
-              - AC_SINGLE_PHASE_CORE
-              - AC_THREE_PHASE_CORE
-              - DC_CORE
-              - DC_EXTENDED
-              - DC_COMBO_CORE
-              - DC_UNIQUE
-        payment_options:
-          type: array
-          items:
-            type: string
-            enum:
-              - CONTRACT
-              - EXTERNAL_PAYMENT
-        value_added_services:
-          type: array
-          items:
-            properties:
-              id: 
-                type: integer
-                format: int64
-              name:
-                type: string
-              scope:
-                type: string
-              freeService:
-                type: boolean
-              category:
-                type: string
-                enum:
-                  - EV_CHARGING
-                  - INTERNET
-                  - CONTRACT_CERTIFICATE
-                  - OTHER_CUSTOM
     Charge-Parameter:
       type: object
       properties:

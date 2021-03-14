@@ -2,13 +2,13 @@ package com.v2gclarity.risev2g.secc.wallboxServerEndpoint;
 
 import java.util.Queue;
 
-import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ChargeProgressType;
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.Status;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EVSENotificationType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.MeterInfoType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PhysicalValueType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.SAScheduleListType;
 
-public class WallboxServerModelSingleton {
+public class WallboxDAO {
 	
 	private PhysicalValueType minCurrent;
 	private PhysicalValueType maxCurrent;
@@ -22,24 +22,10 @@ public class WallboxServerModelSingleton {
 	private EVSENotificationType evseNotificationType;
 	private Queue<MeterInfoType> meterInfo;
 	private SAScheduleListType saScheduleList;
+	private Status status;
 	
-	private static volatile WallboxServerModelSingleton instance;
-	private static Object mutex = new Object();
+	public WallboxDAO() {}
 	
-	private WallboxServerModelSingleton() {}
-	
-	public static WallboxServerModelSingleton getInstance() {
-		WallboxServerModelSingleton result = instance;
-		if (result == null) {
-			synchronized (mutex) {
-				result = instance;
-				if (result == null) {
-					instance = result = new WallboxServerModelSingleton();
-				}
-			}
-		}
-		return result;
-	}
 
 	public SAScheduleListType getSaScheduleList() {
 		return saScheduleList;
@@ -135,6 +121,15 @@ public class WallboxServerModelSingleton {
 
 	public void setEvseNotificationType(EVSENotificationType evseNotificationType) {
 		this.evseNotificationType = evseNotificationType;
+	}
+
+
+	public Status getStatus() {
+		return status;
+	}
+	
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 }

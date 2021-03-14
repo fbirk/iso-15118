@@ -13,18 +13,8 @@
 	<artifactId>rise-v2g-secc</artifactId>
 	<name>rise-v2g-secc</name>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.glassfish.jersey</groupId>
-				<artifactId>jersey-bom</artifactId>
-				<version>3.0.0</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<dependencies>
+<<<<<<< HEAD
 		<!-- Log4j Logging Framework -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -41,28 +31,62 @@
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
 			<version>11.0.0</version>
-		</dependency>
+=======
+		<!-- Dependencies for the jetty REST server -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>11.0.0</version>
+			<version>${jetty.version}</version>
+>>>>>>> dev-standalone-rest-server
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
+		<!-- Dependencies for Jersey -->
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-server</artifactId>
+<<<<<<< HEAD
+=======
+			<version>${jersey.version}</version>
+>>>>>>> dev-standalone-rest-server
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
+<<<<<<< HEAD
+=======
+			<version>${jersey.version}</version>
+>>>>>>> dev-standalone-rest-server
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-jetty-http</artifactId>
+<<<<<<< HEAD
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-moxy</artifactId>
 		</dependency>
+=======
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+
+		<!-- Jackson JSON -->
+>>>>>>> dev-standalone-rest-server
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-json-provider</artifactId>
@@ -73,21 +97,21 @@
 			<artifactId>jackson-datatype-joda</artifactId>
 			<version>2.12.1</version>
 		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-multipart</artifactId>
-		</dependency>
+
+		<!-- Swagger Dependencies -->
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-jaxrs</artifactId>
 			<version>1.6.2</version>
 		</dependency>
+
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
 			<version>7.0</version>
 			<scope>provided</scope>
 		</dependency>
+<<<<<<< HEAD
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-grizzly2-http</artifactId>
@@ -96,6 +120,9 @@
 			<groupId>org.glassfish.jersey.inject</groupId>
 			<artifactId>jersey-hk2</artifactId>
 		</dependency>
+=======
+
+>>>>>>> dev-standalone-rest-server
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -124,6 +151,8 @@
 	</dependencies>
 
 	<properties>
+		<jetty.version>9.4.6.v20170531</jetty.version>
+		<jersey.version>2.27</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.version>${project.version}</project.version>
 	</properties>
@@ -210,8 +239,8 @@
 							<!-- The openapi generator name (in this case jaxrs-jersey for a jersey 
 								server stub) -->
 							<generatorName>jaxrs-jersey</generatorName>
-							<!-- Overwrite previously generated files -->
-							<skipOverwrite>true</skipOverwrite>
+							<!-- Don't overwrite previously generated files -->
+							<skipOverwrite>false</skipOverwrite>
 							<configOptions>
 								<!-- the root src folder in the output folder -->
 								<sourceFolder>src/main/java/</sourceFolder>

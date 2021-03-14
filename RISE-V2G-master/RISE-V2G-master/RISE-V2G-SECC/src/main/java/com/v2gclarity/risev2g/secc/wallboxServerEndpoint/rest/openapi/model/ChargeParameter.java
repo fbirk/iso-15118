@@ -31,7 +31,7 @@ import javax.validation.Valid;
   ChargeParameter.JSON_PROPERTY_AC_CHARGE_PARAMETER,
   ChargeParameter.JSON_PROPERTY_DC_CHARGE_PARAMETER
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-02-22T09:14:36.215937400+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-14T10:53:36.676157800+01:00[Europe/Berlin]")
 public class ChargeParameter   {
   public static final String JSON_PROPERTY_AC_CHARGE_PARAMETER = "ac-charge-parameter";
   @JsonProperty(JSON_PROPERTY_AC_CHARGE_PARAMETER)

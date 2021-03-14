@@ -10,7 +10,7 @@ import io.swagger.jaxrs.*;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.ChargeParameter;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.Error;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.InlineObject;
-import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.OfferedServices;
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.InlineResponse200;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.SASchedule;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.Status;
 
@@ -35,7 +35,7 @@ import javax.validation.Valid;
 
 
 @io.swagger.annotations.Api(description = "the communication-session API")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-02-22T09:14:36.215937400+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-14T10:53:36.676157800+01:00[Europe/Berlin]")
 public class CommunicationSessionApi  {
    private final CommunicationSessionApiService delegate;
 
@@ -60,9 +60,9 @@ public class CommunicationSessionApi  {
       this.delegate = delegate;
    }
 
-    @POST
+    @GET
     
-    @Consumes({ "application/json", "application/xml" })
+    
     @Produces({ "application/xml", "application/json" })
     @io.swagger.annotations.ApiOperation(value = "Generate a new communication session", notes = "", response = String.class, authorizations = {
         @io.swagger.annotations.Authorization(value = "petstore_auth", scopes = {
@@ -72,11 +72,11 @@ public class CommunicationSessionApi  {
     }, tags={ "communication-session", })
     @io.swagger.annotations.ApiResponses(value = {
         @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = String.class),
-        @io.swagger.annotations.ApiResponse(code = 200, message = "unexpected error", response = Error.class)
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
     })
-    public Response addCommunicationSession(@ApiParam(value = "Overview of services the EVSE offers.", required = true) @NotNull @Valid  OfferedServices body,@Context SecurityContext securityContext)
+    public Response addCommunicationSession(@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.addCommunicationSession(body, securityContext);
+        return delegate.addCommunicationSession(securityContext);
     }
     @GET
     @Path("/{session-id}/charge-parameter")
@@ -90,7 +90,7 @@ public class CommunicationSessionApi  {
     }, tags={ "communication-session charge-parameter", })
     @io.swagger.annotations.ApiResponses(value = {
         @io.swagger.annotations.ApiResponse(code = 200, message = "Expected response to a valid request", response = ChargeParameter.class),
-        @io.swagger.annotations.ApiResponse(code = 200, message = "unexpected error", response = Error.class)
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
     })
     public Response communicationSessionSessionIdChargeParameterGet(@ApiParam(value = "The id of the V2G communication session.", required = true) @PathParam("session-id") @NotNull  String sessionId,@Context SecurityContext securityContext)
     throws NotFoundException {
@@ -100,14 +100,14 @@ public class CommunicationSessionApi  {
     @Path("/{session-id}/charge-parameter")
     @Consumes({ "application/json", "application/xml" })
     @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Create new charge parameters for a specific V2G communication session", notes = "", response = Error.class, authorizations = {
+    @io.swagger.annotations.ApiOperation(value = "Create new charge parameters for a specific V2G communication session", notes = "", response = Void.class, authorizations = {
         @io.swagger.annotations.Authorization(value = "petstore_auth", scopes = {
             @io.swagger.annotations.AuthorizationScope(scope = "write:pets", description = "modify pets in your account"),
             @io.swagger.annotations.AuthorizationScope(scope = "read:pets", description = "read your pets")
         })
     }, tags={ "communication-session charge-parameter", })
     @io.swagger.annotations.ApiResponses(value = {
-        @io.swagger.annotations.ApiResponse(code = 200, message = "unexpected error", response = Error.class)
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
     })
     public Response communicationSessionSessionIdChargeParameterPost(@ApiParam(value = "The id of the V2G communication session.", required = true) @PathParam("session-id") @NotNull  String sessionId,@ApiParam(value = "A set of charge parameters for AC or DC charging", required = true) @NotNull @Valid  ChargeParameter body,@Context SecurityContext securityContext)
     throws NotFoundException {
@@ -117,14 +117,14 @@ public class CommunicationSessionApi  {
     @Path("/{session-id}/charge-parameter")
     @Consumes({ "application/json", "application/xml" })
     @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Update the charge parameters for a specific V2G communication session", notes = "", response = Error.class, authorizations = {
+    @io.swagger.annotations.ApiOperation(value = "Update the charge parameters for a specific V2G communication session", notes = "", response = Void.class, authorizations = {
         @io.swagger.annotations.Authorization(value = "petstore_auth", scopes = {
             @io.swagger.annotations.AuthorizationScope(scope = "write:pets", description = "modify pets in your account"),
             @io.swagger.annotations.AuthorizationScope(scope = "read:pets", description = "read your pets")
         })
     }, tags={ "communication-session charge-parameter", })
     @io.swagger.annotations.ApiResponses(value = {
-        @io.swagger.annotations.ApiResponse(code = 200, message = "unexpected error", response = Error.class)
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
     })
     public Response communicationSessionSessionIdChargeParameterPut(@ApiParam(value = "The id of the V2G communication session.", required = true) @PathParam("session-id") @NotNull  String sessionId,@ApiParam(value = "A set of charge parameters for AC or DC charging", required = true) @NotNull @Valid  ChargeParameter body,@Context SecurityContext securityContext)
     throws NotFoundException {
@@ -142,7 +142,7 @@ public class CommunicationSessionApi  {
     }, tags={ "communication-session schedule", })
     @io.swagger.annotations.ApiResponses(value = {
         @io.swagger.annotations.ApiResponse(code = 200, message = "Expected response to a valid request", response = SASchedule.class),
-        @io.swagger.annotations.ApiResponse(code = 200, message = "unexpected error", response = Error.class)
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
     })
     public Response communicationSessionSessionIdScheduleGet(@ApiParam(value = "The id of the V2G communication session.", required = true) @PathParam("session-id") @NotNull  String sessionId,@Context SecurityContext securityContext)
     throws NotFoundException {
@@ -155,7 +155,7 @@ public class CommunicationSessionApi  {
     @io.swagger.annotations.ApiOperation(value = "Get the current status of the communication session.", notes = "", response = Status.class, tags={ "communication-session status", })
     @io.swagger.annotations.ApiResponses(value = {
         @io.swagger.annotations.ApiResponse(code = 200, message = "Expected response to a valid request", response = Status.class),
-        @io.swagger.annotations.ApiResponse(code = 200, message = "unexpected error", response = Error.class)
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
     })
     public Response communicationSessionSessionIdStatusGet(@ApiParam(value = "The id of the V2G communication session.", required = true) @PathParam("session-id") @NotNull  String sessionId,@Context SecurityContext securityContext)
     throws NotFoundException {
@@ -165,12 +165,48 @@ public class CommunicationSessionApi  {
     @Path("/{session-id}/status")
     @Consumes({ "application/json" })
     @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Change the status to 'paused' for a given time interval.", notes = "", response = Error.class, tags={ "communication-session status", })
+    @io.swagger.annotations.ApiOperation(value = "Change the status to 'paused' for a given time interval.", notes = "", response = Void.class, tags={ "communication-session status", })
     @io.swagger.annotations.ApiResponses(value = {
-        @io.swagger.annotations.ApiResponse(code = 200, message = "unexpected error", response = Error.class)
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
     })
     public Response communicationSessionSessionIdStatusPut(@ApiParam(value = "The id of the V2G communication session.", required = true) @PathParam("session-id") @NotNull  String sessionId,@ApiParam(value = "") @Valid  InlineObject inlineObject,@Context SecurityContext securityContext)
     throws NotFoundException {
         return delegate.communicationSessionSessionIdStatusPut(sessionId, inlineObject, securityContext);
+    }
+    @GET
+    @Path("/findByStatus")
+    
+    @Produces({ "application/xml", "application/json" })
+    @io.swagger.annotations.ApiOperation(value = "Finds Sessions by their status", notes = "Multiple status values can be provided with comma separated strings", response = InlineResponse200.class, responseContainer = "List", authorizations = {
+        @io.swagger.annotations.Authorization(value = "petstore_auth", scopes = {
+            @io.swagger.annotations.AuthorizationScope(scope = "write:pets", description = "modify pets in your account"),
+            @io.swagger.annotations.AuthorizationScope(scope = "read:pets", description = "read your pets")
+        })
+    }, tags={ "communication-session", })
+    @io.swagger.annotations.ApiResponses(value = {
+        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = InlineResponse200.class, responseContainer = "List"),
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
+    })
+    public Response findCommunicationSessionByStatus(@ApiParam(value = "Status values that need to be considered for filter", required = true, allowableValues="Charging, Paused, Stoped") @QueryParam("status") @NotNull @Valid  Status status,@Context SecurityContext securityContext)
+    throws NotFoundException {
+        return delegate.findCommunicationSessionByStatus(status, securityContext);
+    }
+    @GET
+    @Path("/test")
+    
+    @Produces({ "application/xml", "application/json" })
+    @io.swagger.annotations.ApiOperation(value = "Test the API connection", notes = "", response = String.class, authorizations = {
+        @io.swagger.annotations.Authorization(value = "petstore_auth", scopes = {
+            @io.swagger.annotations.AuthorizationScope(scope = "write:pets", description = "modify pets in your account"),
+            @io.swagger.annotations.AuthorizationScope(scope = "read:pets", description = "read your pets")
+        })
+    }, tags={ "test", })
+    @io.swagger.annotations.ApiResponses(value = {
+        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = String.class),
+        @io.swagger.annotations.ApiResponse(code = 400, message = "unexpected error", response = Error.class)
+    })
+    public Response getTest(@Context SecurityContext securityContext)
+    throws NotFoundException {
+        return delegate.getTest(securityContext);
     }
 }

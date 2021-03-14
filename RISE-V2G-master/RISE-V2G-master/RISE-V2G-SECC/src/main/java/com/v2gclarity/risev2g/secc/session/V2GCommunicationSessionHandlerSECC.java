@@ -106,7 +106,7 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				 * race conditions. 
 				 */
 				getLogger().debug("Resuming previous communication session ...");
-				// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Resuming session.", ipAddress, MessageType.discoveryReq));
+				wallboxServerEndpoint.sendMessage("Resuming session." + ipAddress + " ");
 				V2GCommunicationSessionSECC continuedSession = getV2gCommunicationSessions().get(ipAddress);
 				
 				// Reset charging session state from previous session (namely ChargingSessionType.PAUSE) to avoid confusion in the algorithm
@@ -119,7 +119,7 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				manageConnectionHandlers((ConnectionHandler) obj);
 			} else { 
 				getLogger().debug("Initiating a new communication session ...");
-				// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Initializing new session.", ipAddress, MessageType.discoveryReq));
+				wallboxServerEndpoint.sendMessage("Initializing new session." + ipAddress);
 
 				V2GCommunicationSessionSECC newSession = new V2GCommunicationSessionSECC((ConnectionHandler) obj, wallboxServerEndpoint);
 				newSession.setTlsConnection((obs instanceof TLSServer) ? true : false);

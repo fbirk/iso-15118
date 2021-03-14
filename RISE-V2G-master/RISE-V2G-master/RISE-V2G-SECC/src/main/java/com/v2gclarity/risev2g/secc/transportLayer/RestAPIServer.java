@@ -15,6 +15,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
  * @author Fabian Birk
  *
  */
+@SuppressWarnings("unused")
 public class RestAPIServer extends Observable implements Runnable {
 
 	private Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
@@ -35,13 +36,21 @@ public class RestAPIServer extends Observable implements Runnable {
 
 	@Override
 	public void run() {
+<<<<<<< HEAD
 		while (!Thread.currentThread().isInterrupted()) {
 			context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 			context.setContextPath("/");
+=======
+		context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		context.setContextPath("/");
+		context.setResourceBase(System.getProperty("user.dir"));
+		context.setWelcomeFiles(new String[] { "index.html", "index.htm", "index.jsp" });
+>>>>>>> dev-standalone-rest-server
 
 			jettyServer = new Server(8080);
 			jettyServer.setHandler(context);
 
+<<<<<<< HEAD
 			ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
 			jerseyServlet.setInitOrder(0);
 
@@ -59,6 +68,22 @@ public class RestAPIServer extends Observable implements Runnable {
 				getLogger().error("Jetty Server Exception", e);
 				stop();
 			}
+=======
+		ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+		jerseyServlet.setInitParameter("dirAllowed", "true");
+		jerseyServlet.setInitOrder(0);
+		
+		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", CommunicationSessionApi.class.getCanonicalName());
+		
+		try {
+			jettyServer.start();
+			
+			getLogger().info("Rest server started at port 8080.");
+			
+			jettyServer.join();
+		} catch(Exception e) {
+			getLogger().error("Jetty Server Exception", e);
+>>>>>>> dev-standalone-rest-server
 		}
 		stop();
 	}
@@ -74,8 +99,19 @@ public class RestAPIServer extends Observable implements Runnable {
 		}
 	}
 
+<<<<<<< HEAD
 	public Logger getLogger() {
 		return logger;
 	}
 
+=======
+	private Logger getLogger() {
+		return logger;
+	}
+
+	private void setLogger(Logger logger) {
+		this.logger = logger;
+	}
+
+>>>>>>> dev-standalone-rest-server
 }
