@@ -9,6 +9,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.CommunicationSessionApi;
+
 /**
  * A simple Jetty server which starts the HSRM Wallbox API Endpoint.
  * 
@@ -36,58 +38,33 @@ public class RestAPIServer extends Observable implements Runnable {
 
 	@Override
 	public void run() {
-<<<<<<< HEAD
-		while (!Thread.currentThread().isInterrupted()) {
-			context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-			context.setContextPath("/");
-=======
 		context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
 		context.setResourceBase(System.getProperty("user.dir"));
 		context.setWelcomeFiles(new String[] { "index.html", "index.htm", "index.jsp" });
->>>>>>> dev-standalone-rest-server
 
-			jettyServer = new Server(8080);
-			jettyServer.setHandler(context);
+		jettyServer = new Server(8080);
+		jettyServer.setHandler(context);
 
-<<<<<<< HEAD
-			ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
-			jerseyServlet.setInitOrder(0);
-
-			jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
-					"com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.CommunicationSessionApi");
-
-			try {
-				jettyServer.start();
-
-				getLogger().info("Rest server started at port 8080.");
-
-				jettyServer.join();
-			} catch (Exception e) {
-				System.err.print(e);
-				getLogger().error("Jetty Server Exception", e);
-				stop();
-			}
-=======
 		ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
 		jerseyServlet.setInitParameter("dirAllowed", "true");
 		jerseyServlet.setInitOrder(0);
-		
-		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", CommunicationSessionApi.class.getCanonicalName());
-		
+
+		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
+				CommunicationSessionApi.class.getCanonicalName());
+
 		try {
 			jettyServer.start();
-			
+
 			getLogger().info("Rest server started at port 8080.");
-			
+
 			jettyServer.join();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			getLogger().error("Jetty Server Exception", e);
->>>>>>> dev-standalone-rest-server
 		}
 		stop();
 	}
-	
+
 	public void stop() {
 		try {
 			jettyServer.stop();
@@ -99,12 +76,6 @@ public class RestAPIServer extends Observable implements Runnable {
 		}
 	}
 
-<<<<<<< HEAD
-	public Logger getLogger() {
-		return logger;
-	}
-
-=======
 	private Logger getLogger() {
 		return logger;
 	}
@@ -112,6 +83,4 @@ public class RestAPIServer extends Observable implements Runnable {
 	private void setLogger(Logger logger) {
 		this.logger = logger;
 	}
-
->>>>>>> dev-standalone-rest-server
 }

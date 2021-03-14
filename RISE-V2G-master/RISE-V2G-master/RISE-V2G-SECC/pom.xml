@@ -14,30 +14,11 @@
 	<name>rise-v2g-secc</name>
 
 	<dependencies>
-<<<<<<< HEAD
-		<!-- Log4j Logging Framework -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.28</version>
-		</dependency>
-		<!-- Dependencies for the jetty/jersey REST server -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-util</artifactId>
-			<version>11.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>11.0.0</version>
-=======
 		<!-- Dependencies for the jetty REST server -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
 			<version>${jetty.version}</version>
->>>>>>> dev-standalone-rest-server
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -49,29 +30,16 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-server</artifactId>
-<<<<<<< HEAD
-=======
 			<version>${jersey.version}</version>
->>>>>>> dev-standalone-rest-server
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
-<<<<<<< HEAD
-=======
 			<version>${jersey.version}</version>
->>>>>>> dev-standalone-rest-server
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-jetty-http</artifactId>
-<<<<<<< HEAD
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-moxy</artifactId>
-		</dependency>
-=======
 			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
@@ -86,7 +54,6 @@
 		</dependency>
 
 		<!-- Jackson JSON -->
->>>>>>> dev-standalone-rest-server
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-json-provider</artifactId>
@@ -111,18 +78,6 @@
 			<version>7.0</version>
 			<scope>provided</scope>
 		</dependency>
-<<<<<<< HEAD
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-grizzly2-http</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.inject</groupId>
-			<artifactId>jersey-hk2</artifactId>
-		</dependency>
-=======
-
->>>>>>> dev-standalone-rest-server
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>

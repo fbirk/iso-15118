@@ -167,4 +167,13 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 
 		return wallboxAPIType;
 	}
+	
+	/**
+	 * Returns the data object of given communication session
+	 * @param sessionID the ID which identifies a communication session
+	 * @return a WallboxDAO object
+	 */
+	public WallboxDAO getWallboxDAO(String sessionID) {
+		return getSessions().get(sessionID);
+	}
 }

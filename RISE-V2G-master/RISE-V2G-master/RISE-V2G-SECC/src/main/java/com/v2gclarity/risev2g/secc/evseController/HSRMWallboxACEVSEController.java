@@ -36,11 +36,10 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PhysicalValueType;
 public class HSRMWallboxACEVSEController implements IACEVSEController {
 
 	private V2GCommunicationSessionSECC commSessionContext;
-	
-	
+
 	public HSRMWallboxACEVSEController() {
 	}
-	
+
 	@Override
 	public String getEvseID() {
 		return "DE*V2G*E12345";
@@ -48,57 +47,55 @@ public class HSRMWallboxACEVSEController implements IACEVSEController {
 
 	@Override
 	public JAXBElement<ACEVSEChargeParameterType> getACEVSEChargeParameter() {
-		commSessionContext.getStates()
-		
+		String sessionID = commSessionContext.getSessionID().toString();
+
 		ACEVSEChargeParameterType acEVSEChargeParameter = new ACEVSEChargeParameterType();
-		
-		PhysicalValueType evseNominalVoltage = commSessionContext.getWallboxServerEndpoint().getACNominalVoltage();
+
+		PhysicalValueType evseNominalVoltage = commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID)
+				.getACNominalVoltage();
 		acEVSEChargeParameter.setEVSENominalVoltage(evseNominalVoltage);
-		
-		PhysicalValueType evseMaxCurrent = commSessionContext.getWallboxServerEndpoint().getMaxCurrent();
+
+		PhysicalValueType evseMaxCurrent = commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID)
+				.getMaxCurrent();
 		acEVSEChargeParameter.setEVSEMaxCurrent(evseMaxCurrent);
-		
-		acEVSEChargeParameter.setACEVSEStatus(getACEVSEStatus(commSessionContext.getWallboxServerEndpoint().getEVSENotificationType()));
-		
+
+		acEVSEChargeParameter.setACEVSEStatus(getACEVSEStatus(
+				commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID).getEvseNotificationType()));
+
 		return new JAXBElement<ACEVSEChargeParameterType>(
 				new QName("urn:iso:15118:2:2013:MsgDataTypes", "AC_EVSEChargeParameter"),
-				ACEVSEChargeParameterType.class, 
-				acEVSEChargeParameter);
+				ACEVSEChargeParameterType.class, acEVSEChargeParameter);
 	}
-	
-	
+
 	@Override
 	public ACEVSEStatusType getACEVSEStatus(EVSENotificationType notification) {
 		ACEVSEStatusType acEVSEStatus = new ACEVSEStatusType();
 		acEVSEStatus.setEVSENotification((notification != null) ? notification : EVSENotificationType.NONE);
 		acEVSEStatus.setNotificationMaxDelay(0);
 		acEVSEStatus.setRCD(false);
-		
+
 		return acEVSEStatus;
 	}
 
-	
 	@Override
 	public void setCommSessionContext(V2GCommunicationSessionSECC commSessionContext) {
 		this.commSessionContext = commSessionContext;
 	}
 
-	
 	@Override
 	public boolean closeContactor() {
 		// A check for CP state B would be necessary
 		return true;
 	}
 
-	
 	@Override
 	public boolean openContactor() {
 		return true;
 	}
 
-	
 	@Override
 	public MeterInfoType getMeterInfo() {
-		return commSessionContext.getWallboxServerEndpoint().getMeterInfo();
+		String sessionID = commSessionContext.getSessionID().toString();
+		return commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID).getMeterInfo().poll();
 	}
 }
