@@ -16,7 +16,7 @@ package com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.PhysicalValueType;
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.WallboxAPIPhysicalValueType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -36,41 +36,41 @@ import javax.validation.Valid;
   ChargeParameterDcChargeParameter.JSON_PROPERTY_PEAK_CURRENT_RIPPLE,
   ChargeParameterDcChargeParameter.JSON_PROPERTY_ENERGY_TO_BE_DELIVERED
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-14T16:14:58.460335900+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-16T21:26:11.753974200+01:00[Europe/Berlin]")
 public class ChargeParameterDcChargeParameter   {
   public static final String JSON_PROPERTY_MAX_CURRENT_LIMIT = "max-current-limit";
   @JsonProperty(JSON_PROPERTY_MAX_CURRENT_LIMIT)
-  private PhysicalValueType maxCurrentLimit;
+  private WallboxAPIPhysicalValueType maxCurrentLimit;
 
   public static final String JSON_PROPERTY_MAX_POWER_LIMIT = "max-power-limit";
   @JsonProperty(JSON_PROPERTY_MAX_POWER_LIMIT)
-  private PhysicalValueType maxPowerLimit;
+  private WallboxAPIPhysicalValueType maxPowerLimit;
 
   public static final String JSON_PROPERTY_MAX_VOLTAGE_LIMIT = "max-voltage-limit";
   @JsonProperty(JSON_PROPERTY_MAX_VOLTAGE_LIMIT)
-  private PhysicalValueType maxVoltageLimit;
+  private WallboxAPIPhysicalValueType maxVoltageLimit;
 
   public static final String JSON_PROPERTY_MIN_CURRENT_LIMIT = "min-current-limit";
   @JsonProperty(JSON_PROPERTY_MIN_CURRENT_LIMIT)
-  private PhysicalValueType minCurrentLimit;
+  private WallboxAPIPhysicalValueType minCurrentLimit;
 
   public static final String JSON_PROPERTY_MIN_VOLTAGE_LIMIT = "min-voltage-limit";
   @JsonProperty(JSON_PROPERTY_MIN_VOLTAGE_LIMIT)
-  private PhysicalValueType minVoltageLimit;
+  private WallboxAPIPhysicalValueType minVoltageLimit;
 
   public static final String JSON_PROPERTY_CURRENT_REGULATION_TOLERANCE = "current-regulation-tolerance";
   @JsonProperty(JSON_PROPERTY_CURRENT_REGULATION_TOLERANCE)
-  private PhysicalValueType currentRegulationTolerance;
+  private WallboxAPIPhysicalValueType currentRegulationTolerance;
 
   public static final String JSON_PROPERTY_PEAK_CURRENT_RIPPLE = "peak-current-ripple";
   @JsonProperty(JSON_PROPERTY_PEAK_CURRENT_RIPPLE)
-  private PhysicalValueType peakCurrentRipple;
+  private WallboxAPIPhysicalValueType peakCurrentRipple;
 
   public static final String JSON_PROPERTY_ENERGY_TO_BE_DELIVERED = "energy-to-be-delivered";
   @JsonProperty(JSON_PROPERTY_ENERGY_TO_BE_DELIVERED)
-  private PhysicalValueType energyToBeDelivered;
+  private WallboxAPIPhysicalValueType energyToBeDelivered;
 
-  public ChargeParameterDcChargeParameter maxCurrentLimit(PhysicalValueType maxCurrentLimit) {
+  public ChargeParameterDcChargeParameter maxCurrentLimit(WallboxAPIPhysicalValueType maxCurrentLimit) {
     this.maxCurrentLimit = maxCurrentLimit;
     return this;
   }
@@ -82,15 +82,15 @@ public class ChargeParameterDcChargeParameter   {
   @JsonProperty("max-current-limit")
   @ApiModelProperty(required = true, value = "")
   @NotNull @Valid 
-  public PhysicalValueType getMaxCurrentLimit() {
+  public WallboxAPIPhysicalValueType getMaxCurrentLimit() {
     return maxCurrentLimit;
   }
 
-  public void setMaxCurrentLimit(PhysicalValueType maxCurrentLimit) {
+  public void setMaxCurrentLimit(WallboxAPIPhysicalValueType maxCurrentLimit) {
     this.maxCurrentLimit = maxCurrentLimit;
   }
 
-  public ChargeParameterDcChargeParameter maxPowerLimit(PhysicalValueType maxPowerLimit) {
+  public ChargeParameterDcChargeParameter maxPowerLimit(WallboxAPIPhysicalValueType maxPowerLimit) {
     this.maxPowerLimit = maxPowerLimit;
     return this;
   }
@@ -102,15 +102,15 @@ public class ChargeParameterDcChargeParameter   {
   @JsonProperty("max-power-limit")
   @ApiModelProperty(required = true, value = "")
   @NotNull @Valid 
-  public PhysicalValueType getMaxPowerLimit() {
+  public WallboxAPIPhysicalValueType getMaxPowerLimit() {
     return maxPowerLimit;
   }
 
-  public void setMaxPowerLimit(PhysicalValueType maxPowerLimit) {
+  public void setMaxPowerLimit(WallboxAPIPhysicalValueType maxPowerLimit) {
     this.maxPowerLimit = maxPowerLimit;
   }
 
-  public ChargeParameterDcChargeParameter maxVoltageLimit(PhysicalValueType maxVoltageLimit) {
+  public ChargeParameterDcChargeParameter maxVoltageLimit(WallboxAPIPhysicalValueType maxVoltageLimit) {
     this.maxVoltageLimit = maxVoltageLimit;
     return this;
   }
@@ -122,15 +122,15 @@ public class ChargeParameterDcChargeParameter   {
   @JsonProperty("max-voltage-limit")
   @ApiModelProperty(required = true, value = "")
   @NotNull @Valid 
-  public PhysicalValueType getMaxVoltageLimit() {
+  public WallboxAPIPhysicalValueType getMaxVoltageLimit() {
     return maxVoltageLimit;
   }
 
-  public void setMaxVoltageLimit(PhysicalValueType maxVoltageLimit) {
+  public void setMaxVoltageLimit(WallboxAPIPhysicalValueType maxVoltageLimit) {
     this.maxVoltageLimit = maxVoltageLimit;
   }
 
-  public ChargeParameterDcChargeParameter minCurrentLimit(PhysicalValueType minCurrentLimit) {
+  public ChargeParameterDcChargeParameter minCurrentLimit(WallboxAPIPhysicalValueType minCurrentLimit) {
     this.minCurrentLimit = minCurrentLimit;
     return this;
   }
@@ -142,15 +142,15 @@ public class ChargeParameterDcChargeParameter   {
   @JsonProperty("min-current-limit")
   @ApiModelProperty(required = true, value = "")
   @NotNull @Valid 
-  public PhysicalValueType getMinCurrentLimit() {
+  public WallboxAPIPhysicalValueType getMinCurrentLimit() {
     return minCurrentLimit;
   }
 
-  public void setMinCurrentLimit(PhysicalValueType minCurrentLimit) {
+  public void setMinCurrentLimit(WallboxAPIPhysicalValueType minCurrentLimit) {
     this.minCurrentLimit = minCurrentLimit;
   }
 
-  public ChargeParameterDcChargeParameter minVoltageLimit(PhysicalValueType minVoltageLimit) {
+  public ChargeParameterDcChargeParameter minVoltageLimit(WallboxAPIPhysicalValueType minVoltageLimit) {
     this.minVoltageLimit = minVoltageLimit;
     return this;
   }
@@ -162,15 +162,15 @@ public class ChargeParameterDcChargeParameter   {
   @JsonProperty("min-voltage-limit")
   @ApiModelProperty(required = true, value = "")
   @NotNull @Valid 
-  public PhysicalValueType getMinVoltageLimit() {
+  public WallboxAPIPhysicalValueType getMinVoltageLimit() {
     return minVoltageLimit;
   }
 
-  public void setMinVoltageLimit(PhysicalValueType minVoltageLimit) {
+  public void setMinVoltageLimit(WallboxAPIPhysicalValueType minVoltageLimit) {
     this.minVoltageLimit = minVoltageLimit;
   }
 
-  public ChargeParameterDcChargeParameter currentRegulationTolerance(PhysicalValueType currentRegulationTolerance) {
+  public ChargeParameterDcChargeParameter currentRegulationTolerance(WallboxAPIPhysicalValueType currentRegulationTolerance) {
     this.currentRegulationTolerance = currentRegulationTolerance;
     return this;
   }
@@ -182,15 +182,15 @@ public class ChargeParameterDcChargeParameter   {
   @JsonProperty("current-regulation-tolerance")
   @ApiModelProperty(value = "")
   @Valid 
-  public PhysicalValueType getCurrentRegulationTolerance() {
+  public WallboxAPIPhysicalValueType getCurrentRegulationTolerance() {
     return currentRegulationTolerance;
   }
 
-  public void setCurrentRegulationTolerance(PhysicalValueType currentRegulationTolerance) {
+  public void setCurrentRegulationTolerance(WallboxAPIPhysicalValueType currentRegulationTolerance) {
     this.currentRegulationTolerance = currentRegulationTolerance;
   }
 
-  public ChargeParameterDcChargeParameter peakCurrentRipple(PhysicalValueType peakCurrentRipple) {
+  public ChargeParameterDcChargeParameter peakCurrentRipple(WallboxAPIPhysicalValueType peakCurrentRipple) {
     this.peakCurrentRipple = peakCurrentRipple;
     return this;
   }
@@ -202,15 +202,15 @@ public class ChargeParameterDcChargeParameter   {
   @JsonProperty("peak-current-ripple")
   @ApiModelProperty(required = true, value = "")
   @NotNull @Valid 
-  public PhysicalValueType getPeakCurrentRipple() {
+  public WallboxAPIPhysicalValueType getPeakCurrentRipple() {
     return peakCurrentRipple;
   }
 
-  public void setPeakCurrentRipple(PhysicalValueType peakCurrentRipple) {
+  public void setPeakCurrentRipple(WallboxAPIPhysicalValueType peakCurrentRipple) {
     this.peakCurrentRipple = peakCurrentRipple;
   }
 
-  public ChargeParameterDcChargeParameter energyToBeDelivered(PhysicalValueType energyToBeDelivered) {
+  public ChargeParameterDcChargeParameter energyToBeDelivered(WallboxAPIPhysicalValueType energyToBeDelivered) {
     this.energyToBeDelivered = energyToBeDelivered;
     return this;
   }
@@ -222,11 +222,11 @@ public class ChargeParameterDcChargeParameter   {
   @JsonProperty("energy-to-be-delivered")
   @ApiModelProperty(value = "")
   @Valid 
-  public PhysicalValueType getEnergyToBeDelivered() {
+  public WallboxAPIPhysicalValueType getEnergyToBeDelivered() {
     return energyToBeDelivered;
   }
 
-  public void setEnergyToBeDelivered(PhysicalValueType energyToBeDelivered) {
+  public void setEnergyToBeDelivered(WallboxAPIPhysicalValueType energyToBeDelivered) {
     this.energyToBeDelivered = energyToBeDelivered;
   }
 

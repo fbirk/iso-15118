@@ -23,7 +23,6 @@
  *******************************************************************************/
 package com.v2gclarity.risev2g.secc.session;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Observable;
@@ -83,7 +82,7 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.ServiceType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.V2GMessage;
 
 public class V2GCommunicationSessionSECC extends V2GCommunicationSession implements Observer {
-	
+
 	private short schemaID;
 	private ACEVSEStatusType acEVSEStatus;
 	private ChargingSessionType chargingSession;
@@ -104,16 +103,17 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 	private MeterInfoType sentMeterInfo;
 	private boolean chargeProgressStarted; // for checking [V2G2-812]
 	private WallboxServerEndpoint wallboxServerEndpoint;
-	
+
 	@SuppressWarnings("deprecation")
 	public V2GCommunicationSessionSECC(ConnectionHandler connectionHandler, WallboxServerEndpoint wallboxServerEndpoint) {
 		this.setWallboxServerEndpoint(wallboxServerEndpoint);
-		
+
 		setConnectionHandler(connectionHandler);
-		
-		// Tell the respective ConnectionHandler to notify if a new V2GTPMessage has arrived (see update()-method)
+
+		// Tell the respective ConnectionHandler to notify if a new V2GTPMessage has
+		// arrived (see update()-method)
 		connectionHandler.addObserver(this);
-		
+
 		getStates().put(V2GMessages.FORK, new ForkState(this));
 		getStates().put(V2GMessages.SUPPORTED_APP_PROTOCOL_REQ, new WaitForSupportedAppProtocolReq(this));
 		getStates().put(V2GMessages.SESSION_SETUP_REQ, new WaitForSessionSetupReq(this));
@@ -133,15 +133,16 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 		getStates().put(V2GMessages.METERING_RECEIPT_REQ, new WaitForMeteringReceiptReq(this));
 		getStates().put(V2GMessages.WELDING_DETECTION_REQ, new WaitForWeldingDetectionReq(this));
 		getStates().put(V2GMessages.SESSION_STOP_REQ, new WaitForSessionStopReq(this));
-		
+
 		setStartState(getStates().get(V2GMessages.SUPPORTED_APP_PROTOCOL_REQ));
 		setCurrentState(getStartState());
-		
+
 		// Configure which EVSE controller implementation to use
 		setACEvseController(SECCImplementationFactory.createACEVSEController(this));
 		setDCEvseController(SECCImplementationFactory.createDCEVSEController(this));
-		
-		// Configures which backend interface implementation to use for retrieving SASchedules
+
+		// Configures which backend interface implementation to use for retrieving
+		// SASchedules
 		setBackendInterface(SECCImplementationFactory.createBackendInterface(this));
 
 		// ACEVSE notification
@@ -149,18 +150,15 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 		getACEVSEStatus().setEVSENotification(EVSENotificationType.NONE);
 		getACEVSEStatus().setNotificationMaxDelay(0);
 		getACEVSEStatus().setRCD(false);
-		
+
 		// Will be set only if a session is to be stopped or paused
 		setChargingSession(null);
-		
+
 		setOfferedServices(new ArrayList<ServiceType>());
-		
-		getLogger().debug("\n*******************************************" +
-						  "\n* New V2G communication session initialized" +
-						  "\n*******************************************");
+
+		getLogger().debug("\n*******************************************" + "\n* New V2G communication session initialized" + "\n*******************************************");
 	}
-	
-	
+
 	@Override
 	public void update(Observable obs, Object obj) {
 		if (obs instanceof ConnectionHandler && obj instanceof byte[]) {
@@ -169,155 +167,146 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 			terminateSession("ConnectionHandler has notified an error", false);
 		}
 	}
-	
-	
+
 	public void processIncomingMessage(Object incomingMessage) {
-		setV2gTpMessage(new V2GTPMessage((byte[]) incomingMessage)); 
-		
-		if (getMessageHandler().isV2GTPMessageValid(getV2gTpMessage()) &&
-			Arrays.equals(getV2gTpMessage().getPayloadType(), GlobalValues.V2GTP_PAYLOAD_TYPE_EXI_ENCODED_V2G_MESSAGE.getByteArrayValue())) {
+		setV2gTpMessage(new V2GTPMessage((byte[]) incomingMessage));
+
+		if (getMessageHandler().isV2GTPMessageValid(getV2gTpMessage())
+				&& Arrays.equals(getV2gTpMessage().getPayloadType(), GlobalValues.V2GTP_PAYLOAD_TYPE_EXI_ENCODED_V2G_MESSAGE.getByteArrayValue())) {
 			/*
-			 * Decide which schema to use for decoding the EXI encoded message. 
-			 * Only the SupportedAppProtocolReq/Res message uses a different schema
+			 * Decide which schema to use for decoding the EXI encoded message. Only the
+			 * SupportedAppProtocolReq/Res message uses a different schema
 			 */
 			if (getCurrentState().equals(getStates().get(V2GMessages.SUPPORTED_APP_PROTOCOL_REQ))) {
 				incomingMessage = (SupportedAppProtocolReq) getMessageHandler().exiToSuppAppProtocolMsg(getV2gTpMessage().getPayload());
 			} else {
 				incomingMessage = (V2GMessage) getMessageHandler().exiToV2gMsg(getV2gTpMessage().getPayload());
 			}
-			
+
 			processReaction(getCurrentState().processIncomingMessage(incomingMessage));
 		} else {
 			getLogger().warn("Received incoming message is not a valid V2GTPMessage", false);
 		}
 	}
-	
-	
+
 	private void processReaction(ReactionToIncomingMessage reactionToIncomingMessage) {
 		// Check the outcome of the processIncomingMessage() of the respective state
 		if (reactionToIncomingMessage instanceof SendMessage) {
 			send((SendMessage) reactionToIncomingMessage);
-			if (getChargingSession() != null && getChargingSession() == ChargingSessionType.TERMINATE) 
+			if (getChargingSession() != null && getChargingSession() == ChargingSessionType.TERMINATE)
 				terminateSession("EVCC indicated request to stop the session or a FAILED response code was sent", true);
-			
+
 			if (getChargingSession() != null && getChargingSession() == ChargingSessionType.PAUSE) {
 				pauseSession(new PauseSession());
 			}
 		} else if (reactionToIncomingMessage instanceof ChangeProcessingState) {
 			setCurrentState(((ChangeProcessingState) reactionToIncomingMessage).getNewState());
-			processReaction(
-					getCurrentState().processIncomingMessage(
-							((ChangeProcessingState) reactionToIncomingMessage).getPayload()));
+			processReaction(getCurrentState().processIncomingMessage(((ChangeProcessingState) reactionToIncomingMessage).getPayload()));
 		} else if (reactionToIncomingMessage instanceof TerminateSession) {
 			/*
-			 * TODO is this really needed? if sth. goes wrong, a negative response code will be sent by
-			 * the respective state anyway, the reaction to this negative response code should only
-			 * instantiate a TerminateSession object.
+			 * TODO is this really needed? if sth. goes wrong, a negative response code will
+			 * be sent by the respective state anyway, the reaction to this negative
+			 * response code should only instantiate a TerminateSession object.
 			 */
 			terminateSession(((TerminateSession) reactionToIncomingMessage));
 		} else {
 			terminateSession("Reaction to incoming message is undefined", false);
 		}
 	}
-	
-	
+
 	/**
 	 * Returns a response code according to 8.4.2
+	 * 
 	 * @param header The header encapsulated in the EVCC request message
 	 * @return The corresponding response code
 	 */
 	public ResponseCodeType checkSessionID(MessageHeaderType header) {
-		if (getCurrentState().equals(getStates().get(V2GMessages.SESSION_SETUP_REQ)) && 
-			ByteUtils.toHexString(header.getSessionID()).equals("00")) {
+		if (getCurrentState().equals(getStates().get(V2GMessages.SESSION_SETUP_REQ)) && ByteUtils.toHexString(header.getSessionID()).equals("00")) {
 			// EV wants to start a totally new charging session
 			setSessionID(generateSessionIDRandomly());
 			setOldSessionJoined(false);
 			return ResponseCodeType.OK_NEW_SESSION_ESTABLISHED;
-		} else if (getCurrentState().equals(getStates().get(V2GMessages.SESSION_SETUP_REQ)) && 
-				   Arrays.equals(header.getSessionID(), getSessionID())) {
-			// A charging pause has taken place and the EV wants to resume the old charging session
+		} else if (getCurrentState().equals(getStates().get(V2GMessages.SESSION_SETUP_REQ)) && Arrays.equals(header.getSessionID(), getSessionID())) {
+			// A charging pause has taken place and the EV wants to resume the old charging
+			// session
 			setOldSessionJoined(true);
 			return ResponseCodeType.OK_OLD_SESSION_JOINED;
-		} else if (getCurrentState().equals(getStates().get(V2GMessages.SESSION_SETUP_REQ)) && 
-				  !ByteUtils.toHexString(header.getSessionID()).equals("00") &&
-				  !Arrays.equals(header.getSessionID(), getSessionID())) {
-			// Avoid a "FAILED_..." response code by generating a new SessionID in the response
-			getLogger().warn("Presented session ID '" + ByteUtils.toHexString(header.getSessionID()) + "' does not match stored session ID '" +
-							 ByteUtils.toHexString(getSessionID()) + "'. Will reassign a new session ID");
+		} else if (getCurrentState().equals(getStates().get(V2GMessages.SESSION_SETUP_REQ)) && !ByteUtils.toHexString(header.getSessionID()).equals("00")
+				&& !Arrays.equals(header.getSessionID(), getSessionID())) {
+			// Avoid a "FAILED_..." response code by generating a new SessionID in the
+			// response
+			getLogger().warn("Presented session ID '" + ByteUtils.toHexString(header.getSessionID()) + "' does not match stored session ID '" + ByteUtils.toHexString(getSessionID())
+					+ "'. Will reassign a new session ID");
 			setSessionID(generateSessionIDRandomly());
 			setOldSessionJoined(false);
 			return ResponseCodeType.OK_NEW_SESSION_ESTABLISHED;
 		} else if (Arrays.equals(header.getSessionID(), getSessionID())) {
-			// This should be the routine during a running charging session after a session setup
+			// This should be the routine during a running charging session after a session
+			// setup
 			setOldSessionJoined(false);
 			return ResponseCodeType.OK;
 		} else {
-			// EV sends a SessionID DURING the already running charging session which does not match
+			// EV sends a SessionID DURING the already running charging session which does
+			// not match
 			setOldSessionJoined(false);
 			return ResponseCodeType.FAILED_UNKNOWN_SESSION;
 		}
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
 	public PaymentOptionListType getPaymentOptions() {
 		ArrayList<PaymentOptionType> paymentOptions = new ArrayList<PaymentOptionType>();
-		
+
 		if (isOldSessionJoined()) {
 			paymentOptions.add(selectedPaymentOption);
-		} else { 
+		} else {
 			paymentOptions.addAll((ArrayList<PaymentOptionType>) (MiscUtils.getPropertyValue("authentication.modes.supported")));
 		}
-		
+
 		// Contract-based payment may only be offered if TLS is used
-		if (!isTlsConnection()) 
+		if (!isTlsConnection())
 			paymentOptions.remove(PaymentOptionType.CONTRACT);
-				
+
 		PaymentOptionListType paymentOptionList = new PaymentOptionListType();
 		paymentOptionList.getPaymentOption().addAll(paymentOptions);
-		
+
 		return paymentOptionList;
 	}
-	
-	
+
 	public void send(SendMessage sendMessage) {
-		// Only EXI encoded messages will be sent here. Decide whether V2GMessage or SupportedAppProtocolRes
+		// Only EXI encoded messages will be sent here. Decide whether V2GMessage or
+		// SupportedAppProtocolRes
 		byte[] payload = null;
-		
+
 		if (sendMessage.getPayload() instanceof V2GMessage) {
 			payload = (byte[]) getMessageHandler().v2gMsgToExi(sendMessage.getPayload());
 		} else {
 			payload = (byte[]) getMessageHandler().suppAppProtocolMsgToExi(sendMessage.getPayload());
 		}
-			
-		setV2gTpMessage(
-				new V2GTPMessage(GlobalValues.V2GTP_VERSION_1_IS.getByteValue(), 
-				GlobalValues.V2GTP_PAYLOAD_TYPE_EXI_ENCODED_V2G_MESSAGE.getByteArrayValue(),
-				payload)
-			);
-		
+
+		setV2gTpMessage(new V2GTPMessage(GlobalValues.V2GTP_VERSION_1_IS.getByteValue(), GlobalValues.V2GTP_PAYLOAD_TYPE_EXI_ENCODED_V2G_MESSAGE.getByteArrayValue(), payload));
+
 		getConnectionHandler().send(getV2gTpMessage());
-		
+
 		if (sendMessage.getNextState() != null) {
 			setCurrentState(sendMessage.getNextState());
 		} else {
 			getLogger().info("State machine has come to an end, no new state provided");
 		}
 	}
-	
-	
+
 	public short getSchemaID() {
 		return schemaID;
 	}
-	
+
 	public void setSchemaID(short schemaID) {
 		this.schemaID = schemaID;
 	}
-	
+
 	public ACEVSEStatusType getACEVSEStatus() {
 		return acEVSEStatus;
 	}
-	
+
 	public void setACEVSEStatus(ACEVSEStatusType acEVSEStatus) {
 		this.acEVSEStatus = acEVSEStatus;
 	}
@@ -342,11 +331,9 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 		return backendInterface;
 	}
 
-
 	public void setBackendInterface(IBackendInterface backendInterface) {
 		this.backendInterface = backendInterface;
 	}
-
 
 	public boolean isOldSessionJoined() {
 		return oldSessionJoined;
@@ -371,137 +358,112 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 	public void setConnectionHandler(ConnectionHandler connectionHandler) {
 		this.connectionHandler = connectionHandler;
 	}
-	
+
 	public ArrayList<ServiceType> getOfferedServices() {
 		return offeredServices;
 	}
-
 
 	public void setOfferedServices(ArrayList<ServiceType> offeredServices) {
 		this.offeredServices = offeredServices;
 	}
 
-
 	public byte[] getGenChallenge() {
 		return genChallenge;
 	}
-
 
 	public void setGenChallenge(byte[] genChallenge) {
 		this.genChallenge = genChallenge;
 	}
 
-
 	public SAScheduleListType getSaSchedules() {
 		return saSchedules;
 	}
-
 
 	public void setSaSchedules(SAScheduleListType saSchedules) {
 		this.saSchedules = saSchedules;
 	}
 
-
 	public EnergyTransferModeType getRequestedEnergyTransferMode() {
 		return requestedEnergyTransferMode;
 	}
 
-
-	public void setRequestedEnergyTransferMode(
-			EnergyTransferModeType requestedEnergyTransferMode) {
+	public void setRequestedEnergyTransferMode(EnergyTransferModeType requestedEnergyTransferMode) {
 		this.requestedEnergyTransferMode = requestedEnergyTransferMode;
 	}
-
 
 	public CertificateChainType getContractSignatureCertChain() {
 		return contractSignatureCertChain;
 	}
 
-
 	public void setContractSignatureCertChain(CertificateChainType contractSignatureCertChain) {
 		this.contractSignatureCertChain = contractSignatureCertChain;
 	}
-
 
 	public MeterInfoType getSentMeterInfo() {
 		return sentMeterInfo;
 	}
 
-
 	public void setSentMeterInfo(MeterInfoType sentMeterInfo) {
 		this.sentMeterInfo = sentMeterInfo;
 	}
-
 
 	public IACEVSEController getACEvseController() {
 		return acEvseController;
 	}
 
-
 	public void setACEvseController(IACEVSEController acEvseController) {
 		this.acEvseController = acEvseController;
 	}
-
 
 	public IDCEVSEController getDCEvseController() {
 		return dcEvseController;
 	}
 
-
 	public void setDCEvseController(IDCEVSEController dcEvseController) {
 		this.dcEvseController = dcEvseController;
 	}
 
-
 	public IEVSEController getEvseController() {
 		if (getRequestedEnergyTransferMode() != null) {
-			if (getRequestedEnergyTransferMode().toString().startsWith("AC")) 
+			if (getRequestedEnergyTransferMode().toString().startsWith("AC"))
 				return acEvseController;
-			else if (getRequestedEnergyTransferMode().toString().startsWith("DC")) 
+			else if (getRequestedEnergyTransferMode().toString().startsWith("DC"))
 				return dcEvseController;
 			else {
-				getLogger().error("RequestedEnergyTransferMode '" + getRequestedEnergyTransferMode().toString() + 
-								   "is neither of type AC nor DC");
+				getLogger().error("RequestedEnergyTransferMode '" + getRequestedEnergyTransferMode().toString() + "is neither of type AC nor DC");
 				return null;
 			}
-		} else return acEvseController; // just AC controller as default
+		} else
+			return acEvseController; // just AC controller as default
 	}
-
 
 	public PaymentOptionType getSelectedPaymentOption() {
 		return selectedPaymentOption;
 	}
 
-
 	public void setSelectedPaymentOption(PaymentOptionType selectedPaymentOption) {
 		this.selectedPaymentOption = selectedPaymentOption;
 	}
-
 
 	public boolean isChargeProgressStarted() {
 		return chargeProgressStarted;
 	}
 
-
 	public void setChargeProgressStarted(boolean chargeProgressStarted) {
 		this.chargeProgressStarted = chargeProgressStarted;
 	}
-
 
 	public ChargingSessionType getChargingSession() {
 		return chargingSession;
 	}
 
-
 	public void setChargingSession(ChargingSessionType chargingSession) {
 		this.chargingSession = chargingSession;
 	}
 
-
 	public WallboxServerEndpoint getWallboxServerEndpoint() {
 		return wallboxServerEndpoint;
 	}
-
 
 	public void setWallboxServerEndpoint(WallboxServerEndpoint wallboxServerEndpoint) {
 		this.wallboxServerEndpoint = wallboxServerEndpoint;

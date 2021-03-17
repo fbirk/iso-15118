@@ -16,7 +16,7 @@ package com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.PhysicalValueType;
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.WallboxAPIPhysicalValueType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -30,17 +30,17 @@ import javax.validation.Valid;
   ChargeParameterAcChargeParameter.JSON_PROPERTY_NOMINAL_VOLTAGE,
   ChargeParameterAcChargeParameter.JSON_PROPERTY_MAX_CURRENT
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-14T16:14:58.460335900+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-16T21:26:11.753974200+01:00[Europe/Berlin]")
 public class ChargeParameterAcChargeParameter   {
   public static final String JSON_PROPERTY_NOMINAL_VOLTAGE = "nominal-voltage";
   @JsonProperty(JSON_PROPERTY_NOMINAL_VOLTAGE)
-  private PhysicalValueType nominalVoltage;
+  private WallboxAPIPhysicalValueType nominalVoltage;
 
   public static final String JSON_PROPERTY_MAX_CURRENT = "max-current";
   @JsonProperty(JSON_PROPERTY_MAX_CURRENT)
-  private PhysicalValueType maxCurrent;
+  private WallboxAPIPhysicalValueType maxCurrent;
 
-  public ChargeParameterAcChargeParameter nominalVoltage(PhysicalValueType nominalVoltage) {
+  public ChargeParameterAcChargeParameter nominalVoltage(WallboxAPIPhysicalValueType nominalVoltage) {
     this.nominalVoltage = nominalVoltage;
     return this;
   }
@@ -52,15 +52,15 @@ public class ChargeParameterAcChargeParameter   {
   @JsonProperty("nominal-voltage")
   @ApiModelProperty(required = true, value = "")
   @NotNull @Valid 
-  public PhysicalValueType getNominalVoltage() {
+  public WallboxAPIPhysicalValueType getNominalVoltage() {
     return nominalVoltage;
   }
 
-  public void setNominalVoltage(PhysicalValueType nominalVoltage) {
+  public void setNominalVoltage(WallboxAPIPhysicalValueType nominalVoltage) {
     this.nominalVoltage = nominalVoltage;
   }
 
-  public ChargeParameterAcChargeParameter maxCurrent(PhysicalValueType maxCurrent) {
+  public ChargeParameterAcChargeParameter maxCurrent(WallboxAPIPhysicalValueType maxCurrent) {
     this.maxCurrent = maxCurrent;
     return this;
   }
@@ -72,11 +72,11 @@ public class ChargeParameterAcChargeParameter   {
   @JsonProperty("max-current")
   @ApiModelProperty(required = true, value = "")
   @NotNull @Valid 
-  public PhysicalValueType getMaxCurrent() {
+  public WallboxAPIPhysicalValueType getMaxCurrent() {
     return maxCurrent;
   }
 
-  public void setMaxCurrent(PhysicalValueType maxCurrent) {
+  public void setMaxCurrent(WallboxAPIPhysicalValueType maxCurrent) {
     this.maxCurrent = maxCurrent;
   }
 

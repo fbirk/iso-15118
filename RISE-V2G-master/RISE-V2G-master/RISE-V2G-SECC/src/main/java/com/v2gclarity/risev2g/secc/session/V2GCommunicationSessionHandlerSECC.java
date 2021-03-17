@@ -52,32 +52,36 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 	private HashMap<String, V2GCommunicationSessionSECC> v2gCommunicationSessions;
 	/*
 	 * Keeps a list of all ConnectionHandlers and their respective running Threads.
-	 * The V2GCommunicationSessionHandlerSECC needs a ConnectionHandler (with its TCP/TLS client socket)
-	 * in order to associate it with a V2GCommunicationSessionSECC. Handing over a Thread instead brings
-	 * up the problem that you can't access the Thread's runnable object (ConnectionHandler).
+	 * The V2GCommunicationSessionHandlerSECC needs a ConnectionHandler (with its
+	 * TCP/TLS client socket) in order to associate it with a
+	 * V2GCommunicationSessionSECC. Handing over a Thread instead brings up the
+	 * problem that you can't access the Thread's runnable object
+	 * (ConnectionHandler).
 	 */
 	private static HashMap<ConnectionHandler, Thread> connectionHandlerMap;
 	private MessageHandler messageHandler;
 	private V2GTPMessage v2gTpMessage;
-	private byte security; 
-	
+	private byte security;
+
 	private WallboxServerEndpoint wallboxServerEndpoint;
-	
+
 	@SuppressWarnings("deprecation")
 	public V2GCommunicationSessionHandlerSECC(WallboxServerEndpoint wallboxServerEndpoint) {
 		this.wallboxServerEndpoint = wallboxServerEndpoint;
-		
-		// Tell the respective transport layer Observables to notify this session handler
+
+		// Tell the respective transport layer Observables to notify this session
+		// handler
 		UDPServer.getInstance().addObserver(this);
 		TCPServer.getInstance().addObserver(this);
 		TLSServer.getInstance().addObserver(this);
-		
-		// Maps IP addresses of the clients given as a String to V2GCommunicationSessionSECC objects
+
+		// Maps IP addresses of the clients given as a String to
+		// V2GCommunicationSessionSECC objects
 		setV2gCommunicationSessions(new HashMap<String, V2GCommunicationSessionSECC>());
-		
+
 		// Maps ConnectionHandlers to their respective running threads
 		setConnectionHandlerMap(new HashMap<ConnectionHandler, Thread>());
-		
+
 		setMessageHandler(MessageHandler.getInstance());
 	}
 
@@ -88,113 +92,113 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 			processSECCDiscoveryReq((DatagramPacket) obj);
 		} else if ((obs instanceof TCPServer || obs instanceof TLSServer) && obj instanceof ConnectionHandler) {
 			String ipAddress = ((ConnectionHandler) obj).getAddress();
-			
+
 			if (getV2gCommunicationSessions().containsKey(ipAddress)) {
 				/*
-				 * Assign the new ConnectionHandler to the respective existing V2GCommunicationSessionSECC.
-				 * This way the V2GCommunicationSessionSECC knows to which socket to write to when
-				 * sending messages and from which socket to read from when receiving messages.
+				 * Assign the new ConnectionHandler to the respective existing
+				 * V2GCommunicationSessionSECC. This way the V2GCommunicationSessionSECC knows
+				 * to which socket to write to when sending messages and from which socket to
+				 * read from when receiving messages.
 				 * 
-				 * This if-clause is executed as soon as an EV resumes a previously paused charging 
-				 * session. Before pausing, the TCP/TLS socket has been closed, but the charging session 
-				 * data object (V2GCommunicationSessionSECC) needed to be kept alive in order to later
-				 * on continue a charging session with the saved data.
-
-				 * Important!
-				 * The connectionHandler thread must not be started (will start reading the incoming bytes)
-				 * before the V2GCommunicationSessionSECC object is instantiated, otherwise it may lead to 
-				 * race conditions. 
+				 * This if-clause is executed as soon as an EV resumes a previously paused
+				 * charging session. Before pausing, the TCP/TLS socket has been closed, but the
+				 * charging session data object (V2GCommunicationSessionSECC) needed to be kept
+				 * alive in order to later on continue a charging session with the saved data.
+				 * 
+				 * Important! The connectionHandler thread must not be started (will start
+				 * reading the incoming bytes) before the V2GCommunicationSessionSECC object is
+				 * instantiated, otherwise it may lead to race conditions.
 				 */
 				getLogger().debug("Resuming previous communication session ...");
 				wallboxServerEndpoint.sendMessage("Resuming session." + ipAddress + " ");
 				V2GCommunicationSessionSECC continuedSession = getV2gCommunicationSessions().get(ipAddress);
-				
-				// Reset charging session state from previous session (namely ChargingSessionType.PAUSE) to avoid confusion in the algorithm
+
+				// Reset charging session state from previous session (namely
+				// ChargingSessionType.PAUSE) to avoid confusion in the algorithm
 				continuedSession.setChargingSession(null);
-				
+
 				continuedSession.setConnectionHandler((ConnectionHandler) obj);
 				continuedSession.setTlsConnection((obs instanceof TLSServer) ? true : false);
 				((ConnectionHandler) obj).addObserver(getV2gCommunicationSessions().get(ipAddress));
-				
+
 				manageConnectionHandlers((ConnectionHandler) obj);
-			} else { 
+			} else {
 				getLogger().debug("Initiating a new communication session ...");
-				wallboxServerEndpoint.sendMessage("Initializing new session." + ipAddress);
 
 				V2GCommunicationSessionSECC newSession = new V2GCommunicationSessionSECC((ConnectionHandler) obj, wallboxServerEndpoint);
 				newSession.setTlsConnection((obs instanceof TLSServer) ? true : false);
 				newSession.addObserver(this);
 				getV2gCommunicationSessions().put(ipAddress, newSession);
-				
+
+				wallboxServerEndpoint.sendMessage("Initializing new session: " + ipAddress + ", Session-ID: " + newSession.getSessionID().toString());
+
 				manageConnectionHandlers((ConnectionHandler) obj);
 			}
 		} else if (obs instanceof V2GCommunicationSessionSECC && obj instanceof TerminateSession) {
 			// Remove the V2GCommunicationSessionSECC instance from the hash map
 			String ipAddress = ((V2GCommunicationSessionSECC) obs).getConnectionHandler().getAddress();
 			getV2gCommunicationSessions().remove(ipAddress);
-			
-			// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Stopping session.", ipAddress, MessageType.discoveryReq));
-			
+
+			wallboxServerEndpoint.sendMessage("Stopping session: " + ipAddress);
+
 			stopConnectionHandler(((V2GCommunicationSessionSECC) obs).getConnectionHandler(), false);
 		} else if (obs instanceof V2GCommunicationSessionSECC && obj instanceof PauseSession) {
-			// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("Pausing session.", "", MessageType.discoveryReq));
+			wallboxServerEndpoint.sendMessage("Pausing session: " + ((V2GCommunicationSessionSECC) obs).getSessionID().toString());
 
-			// Stop the connection handler, but keep the V2GCommunicationSessionSECC instance in the hash map
+			// Stop the connection handler, but keep the V2GCommunicationSessionSECC
+			// instance in the hash map
 			stopConnectionHandler(((V2GCommunicationSessionSECC) obs).getConnectionHandler(), true);
 		} else {
 			getLogger().warn("Notification received, but sending entity or received object not identifiable");
 		}
 	}
 
-	
 	private void manageConnectionHandlers(ConnectionHandler connectionHandler) {
 		Thread connectionHandlerThread = new Thread(connectionHandler);
 		connectionHandlerThread.setDaemon(true);
 		connectionHandlerThread.setName("ConnectionThread " + connectionHandler.getAddress());
 		connectionHandlerThread.start();
-		
+
 		getConnectionHandlerMap().put(connectionHandler, connectionHandlerThread);
 	}
-	
+
 	private void processSECCDiscoveryReq(DatagramPacket udpClientPacket) {
 		setV2gTpMessage(new V2GTPMessage(udpClientPacket.getData()));
-		
+
 		try {
-			if (getMessageHandler().isV2GTPMessageValid(getV2gTpMessage()) &&
-			    Arrays.equals(getV2gTpMessage().getPayloadType(), GlobalValues.V2GTP_PAYLOAD_TYPE_SDP_REQUEST_MESSAGE.getByteArrayValue())) {
-				
+			if (getMessageHandler().isV2GTPMessageValid(getV2gTpMessage())
+					&& Arrays.equals(getV2gTpMessage().getPayloadType(), GlobalValues.V2GTP_PAYLOAD_TYPE_SDP_REQUEST_MESSAGE.getByteArrayValue())) {
+
 				SECCDiscoveryReq seccDiscoveryReq = new SECCDiscoveryReq(getV2gTpMessage().getPayload());
 				setSecurity(seccDiscoveryReq.getSecurity());
 				getLogger().debug("SECCDiscoveryReq received");
-				// wallboxServerEndpoint.sendDiscoveryReq(new WallboxInterfaceMessage("SECCDiscoveryReq received.", "Security: " + getSecurity(), MessageType.discoveryReq));
 
-				
+				wallboxServerEndpoint.sendMessage("SECCDiscoveryReq received");
+
 				/*
-				 * The TCP and TLS server ports are created upon initialization of the TCP/TLS server and will 
-				 * remain the same for every connected EV. Only TCP or TLS are allowed as transport 
-				 * protocols for further communication beyond the SECCDiscoveryReq/-Res handshake (not UDP).
+				 * The TCP and TLS server ports are created upon initialization of the TCP/TLS
+				 * server and will remain the same for every connected EV. Only TCP or TLS are
+				 * allowed as transport protocols for further communication beyond the
+				 * SECCDiscoveryReq/-Res handshake (not UDP).
 				 * 
-				 * One might implement further decision rules for dealing with the security level (TCP or TLS)
-				 * requested by the EVCC (see also Table 3 and 4 of ISO/IEC 15118-2). For now, the requested
-				 * security level of the EVCC will always be accepted.
+				 * One might implement further decision rules for dealing with the security
+				 * level (TCP or TLS) requested by the EVCC (see also Table 3 and 4 of ISO/IEC
+				 * 15118-2). For now, the requested security level of the EVCC will always be
+				 * accepted.
 				 */
 				byte[] seccAddress = (isSecureCommunication()) ? TLSServer.getInstance().getServerAddress().getAddress() : TCPServer.getInstance().getServerAddress().getAddress();
 				int seccPort = (isSecureCommunication()) ? TLSServer.getInstance().getServerPort() : TCPServer.getInstance().getServerPort();
-						
-				SECCDiscoveryRes seccDiscoveryRes = new SECCDiscoveryRes(
-															seccAddress,
-															ByteUtils.toByteArrayFromInt(seccPort, true),
-															getSecurity(),
-															GlobalValues.V2G_TRANSPORT_PROTOCOL_TCP.getByteValue()
-														);
-				
-				setV2gTpMessage(new V2GTPMessage(GlobalValues.V2GTP_VERSION_1_IS.getByteValue(), 
-												 GlobalValues.V2GTP_PAYLOAD_TYPE_SDP_RESPONSE_MESSAGE.getByteArrayValue(),
-												 seccDiscoveryRes.getPayload()));
-				
+
+				SECCDiscoveryRes seccDiscoveryRes = new SECCDiscoveryRes(seccAddress, ByteUtils.toByteArrayFromInt(seccPort, true), getSecurity(), GlobalValues.V2G_TRANSPORT_PROTOCOL_TCP
+						.getByteValue());
+
+				setV2gTpMessage(new V2GTPMessage(GlobalValues.V2GTP_VERSION_1_IS.getByteValue(), GlobalValues.V2GTP_PAYLOAD_TYPE_SDP_RESPONSE_MESSAGE.getByteArrayValue(), seccDiscoveryRes
+						.getPayload()));
+
 				getLogger().debug("Preparing to send SECCDiscoveryRes ...");
-				
-				// The SECCDiscoveryRes must be sent via UDP before the requested TCP/TLS server can be used
+
+				// The SECCDiscoveryRes must be sent via UDP before the requested TCP/TLS server
+				// can be used
 				UDPServer.getInstance().send(getV2gTpMessage(), (Inet6Address) udpClientPacket.getAddress(), udpClientPacket.getPort());
 			} else {
 				getLogger().warn("Incoming DatagramPacket could not be identified as an SECCDiscoveryReq");
@@ -203,47 +207,44 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 			getLogger().error("NullPointerException occurred while processing SECCDiscoveryReq", e);
 		}
 	}
-	
+
 	/**
-	 * Stops (interrupts) the respective thread running the provided ConnectionHandler and tries
-	 * to close its socket. 
-	 * @param connectionHandler The ConnectionHandler whose socket is to be closed and whose thread
-	 * 							   is to be interrupted.
+	 * Stops (interrupts) the respective thread running the provided
+	 * ConnectionHandler and tries to close its socket.
+	 * 
+	 * @param connectionHandler The ConnectionHandler whose socket is to be closed
+	 *                          and whose thread is to be interrupted.
 	 */
 	public void stopConnectionHandler(ConnectionHandler connectionHandler, boolean pausingSession) {
 		if (getConnectionHandlerMap().containsKey(connectionHandler)) {
 			// Close the socket
 			connectionHandler.stop();
-			
+
 			// Interrupt session thread
 			Thread connectionThread = getConnectionHandlerMap().get(connectionHandler);
 			connectionThread.interrupt();
-			
+
 			// Remove HashMap entry
 			getConnectionHandlerMap().remove(connectionHandler);
-			
-			
-			getLogger().debug("Thread '" + connectionThread.getName() + "' has been interrupted and removed" + 
-							  ((pausingSession) ? ". Charging session is paused." : "") + "\n\n");
+
+			getLogger().debug("Thread '" + connectionThread.getName() + "' has been interrupted and removed" + ((pausingSession) ? ". Charging session is paused." : "") + "\n\n");
 		} else {
 			String address = connectionHandler.getAddress();
-			int port = connectionHandler.getPort(); 
+			int port = connectionHandler.getPort();
 
-			getLogger().warn("No active connection to socket with IP address " +
-							 address + " and port " + port + " found.");
+			getLogger().warn("No active connection to socket with IP address " + address + " and port " + port + " found.");
 		}
 	}
-	
+
 	public boolean isSecureCommunication() {
 		return Byte.compare(getSecurity(), GlobalValues.V2G_SECURITY_WITH_TLS.getByteValue()) == 0 ? true : false;
 	}
-	
+
 	public HashMap<String, V2GCommunicationSessionSECC> getV2gCommunicationSessions() {
 		return v2gCommunicationSessions;
 	}
 
-	public void setV2gCommunicationSessions(
-			HashMap<String, V2GCommunicationSessionSECC> v2gCommunicationSessions) {
+	public void setV2gCommunicationSessions(HashMap<String, V2GCommunicationSessionSECC> v2gCommunicationSessions) {
 		this.v2gCommunicationSessions = v2gCommunicationSessions;
 	}
 

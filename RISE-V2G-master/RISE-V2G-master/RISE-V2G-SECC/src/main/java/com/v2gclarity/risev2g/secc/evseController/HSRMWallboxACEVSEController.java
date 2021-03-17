@@ -51,20 +51,15 @@ public class HSRMWallboxACEVSEController implements IACEVSEController {
 
 		ACEVSEChargeParameterType acEVSEChargeParameter = new ACEVSEChargeParameterType();
 
-		PhysicalValueType evseNominalVoltage = commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID)
-				.getACNominalVoltage();
+		PhysicalValueType evseNominalVoltage = commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID).getACNominalVoltage();
 		acEVSEChargeParameter.setEVSENominalVoltage(evseNominalVoltage);
 
-		PhysicalValueType evseMaxCurrent = commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID)
-				.getMaxCurrent();
+		PhysicalValueType evseMaxCurrent = commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID).getMaxCurrent();
 		acEVSEChargeParameter.setEVSEMaxCurrent(evseMaxCurrent);
 
-		acEVSEChargeParameter.setACEVSEStatus(getACEVSEStatus(
-				commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID).getEvseNotificationType()));
+		acEVSEChargeParameter.setACEVSEStatus(getACEVSEStatus(commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID).getEvseNotificationType()));
 
-		return new JAXBElement<ACEVSEChargeParameterType>(
-				new QName("urn:iso:15118:2:2013:MsgDataTypes", "AC_EVSEChargeParameter"),
-				ACEVSEChargeParameterType.class, acEVSEChargeParameter);
+		return new JAXBElement<ACEVSEChargeParameterType>(new QName("urn:iso:15118:2:2013:MsgDataTypes", "AC_EVSEChargeParameter"), ACEVSEChargeParameterType.class, acEVSEChargeParameter);
 	}
 
 	@Override

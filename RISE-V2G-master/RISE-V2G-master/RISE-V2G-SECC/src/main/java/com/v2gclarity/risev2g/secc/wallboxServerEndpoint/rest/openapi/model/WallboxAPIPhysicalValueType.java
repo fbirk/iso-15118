@@ -24,15 +24,15 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 
 /**
- * PhysicalValueType
+ * WallboxAPIPhysicalValueType
  */
 @JsonPropertyOrder({
-  PhysicalValueType.JSON_PROPERTY_MULTIPLIER,
-  PhysicalValueType.JSON_PROPERTY_VALUE,
-  PhysicalValueType.JSON_PROPERTY_UNIT
+  WallboxAPIPhysicalValueType.JSON_PROPERTY_MULTIPLIER,
+  WallboxAPIPhysicalValueType.JSON_PROPERTY_VALUE,
+  WallboxAPIPhysicalValueType.JSON_PROPERTY_UNIT
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-14T16:14:58.460335900+01:00[Europe/Berlin]")
-public class PhysicalValueType   {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-16T21:26:11.753974200+01:00[Europe/Berlin]")
+public class WallboxAPIPhysicalValueType   {
   public static final String JSON_PROPERTY_MULTIPLIER = "multiplier";
   @JsonProperty(JSON_PROPERTY_MULTIPLIER)
   private Integer multiplier;
@@ -80,7 +80,7 @@ public class PhysicalValueType   {
   @JsonProperty(JSON_PROPERTY_UNIT)
   private UnitEnum unit;
 
-  public PhysicalValueType multiplier(Integer multiplier) {
+  public WallboxAPIPhysicalValueType multiplier(Integer multiplier) {
     this.multiplier = multiplier;
     return this;
   }
@@ -100,7 +100,7 @@ public class PhysicalValueType   {
     this.multiplier = multiplier;
   }
 
-  public PhysicalValueType value(Integer value) {
+  public WallboxAPIPhysicalValueType value(Integer value) {
     this.value = value;
     return this;
   }
@@ -120,7 +120,7 @@ public class PhysicalValueType   {
     this.value = value;
   }
 
-  public PhysicalValueType unit(UnitEnum unit) {
+  public WallboxAPIPhysicalValueType unit(UnitEnum unit) {
     this.unit = unit;
     return this;
   }
@@ -149,10 +149,10 @@ public class PhysicalValueType   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PhysicalValueType physicalValueType = (PhysicalValueType) o;
-    return Objects.equals(this.multiplier, physicalValueType.multiplier) &&
-        Objects.equals(this.value, physicalValueType.value) &&
-        Objects.equals(this.unit, physicalValueType.unit);
+    WallboxAPIPhysicalValueType wallboxAPIPhysicalValueType = (WallboxAPIPhysicalValueType) o;
+    return Objects.equals(this.multiplier, wallboxAPIPhysicalValueType.multiplier) &&
+        Objects.equals(this.value, wallboxAPIPhysicalValueType.value) &&
+        Objects.equals(this.unit, wallboxAPIPhysicalValueType.unit);
   }
 
   @Override
@@ -164,7 +164,7 @@ public class PhysicalValueType   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PhysicalValueType {\n");
+    sb.append("class WallboxAPIPhysicalValueType {\n");
     
     sb.append("    multiplier: ").append(toIndentedString(multiplier)).append("\n");
     sb.append("    value: ").append(toIndentedString(value)).append("\n");

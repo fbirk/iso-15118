@@ -24,7 +24,10 @@ public class WallboxDAO {
 	private SAScheduleListType saScheduleList;
 	private Status status;
 	
-	public WallboxDAO() {}
+	public WallboxDAO() {
+		evseNotificationType = EVSENotificationType.STOP_CHARGING;
+		status = Status.STOPED;
+	}
 	
 
 	public SAScheduleListType getSaScheduleList() {

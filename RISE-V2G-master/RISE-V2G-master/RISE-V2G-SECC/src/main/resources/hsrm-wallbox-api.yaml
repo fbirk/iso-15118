@@ -287,7 +287,7 @@ paths:
           schema:
             $ref: '#/components/schemas/SessionId'
       requestBody:
-        description: A time interval, by which the status is set to 'paused'.
+        description: A time interval, by which the status is set to 'paused'. The time interval must not exceed 24h!
         content:
           application/json:
             schema:
@@ -331,9 +331,9 @@ components:
             - max-current
           properties:
             nominal-voltage:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
             max-current:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
         dc-charge-parameter:
           type: object
           required:
@@ -345,21 +345,21 @@ components:
             - peak-current-ripple
           properties:
             max-current-limit:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
             max-power-limit:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
             max-voltage-limit:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
             min-current-limit:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
             min-voltage-limit:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
             current-regulation-tolerance:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
             peak-current-ripple:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
             energy-to-be-delivered:
-              $ref: '#/components/schemas/Physical-Value-Type'
+              $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
       minProperties: 1
       maxProperties: 1
       additionalProperties: false
@@ -373,8 +373,8 @@ components:
           items:
             properties:
               p_max_schedule_entry:
-                $ref: '#/components/schemas/Physical-Value-Type'
-    Physical-Value-Type:
+                $ref: '#/components/schemas/Wallbox-API-Physical-Value-Type'
+    Wallbox-API-Physical-Value-Type:
       type: object
       properties:
         multiplier:

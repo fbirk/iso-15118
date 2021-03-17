@@ -30,7 +30,7 @@ import javax.validation.Valid;
 @JsonPropertyOrder({
   SASchedule.JSON_PROPERTY_P_MAX_SCHEDULE
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-14T16:14:58.460335900+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-16T21:26:11.753974200+01:00[Europe/Berlin]")
 public class SASchedule   {
   public static final String JSON_PROPERTY_P_MAX_SCHEDULE = "p_max_schedule";
   @JsonProperty(JSON_PROPERTY_P_MAX_SCHEDULE)

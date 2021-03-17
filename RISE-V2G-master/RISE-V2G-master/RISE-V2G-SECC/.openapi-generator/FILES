@@ -19,7 +19,7 @@ src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/openapi/mod
 src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/openapi/model/Error.java
 src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/openapi/model/InlineObject.java
 src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/openapi/model/InlineResponse200.java
-src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/openapi/model/PhysicalValueType.java
 src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/openapi/model/SASchedule.java
 src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/openapi/model/Status.java
+src/main/java/com/v2gclarity/risev2g/secc/wallboxServerEndpoint/rest/openapi/model/WallboxAPIPhysicalValueType.java
 src/main/webapp/WEB-INF/web.xml
