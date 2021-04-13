@@ -83,6 +83,7 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.V2GMessage;
 
 public class V2GCommunicationSessionSECC extends V2GCommunicationSession implements Observer {
 
+	private String ipAdress;
 	private short schemaID;
 	private ACEVSEStatusType acEVSEStatus;
 	private ChargingSessionType chargingSession;
@@ -467,5 +468,13 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 
 	public void setWallboxServerEndpoint(WallboxServerEndpoint wallboxServerEndpoint) {
 		this.wallboxServerEndpoint = wallboxServerEndpoint;
+	}
+
+	public String getIpAdress() {
+		return ipAdress;
+	}
+
+	public void setIpAdress(String ipAdress) {
+		this.ipAdress = ipAdress;
 	}
 }

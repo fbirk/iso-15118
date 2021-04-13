@@ -128,8 +128,10 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				V2GCommunicationSessionSECC newSession = new V2GCommunicationSessionSECC((ConnectionHandler) obj, wallboxServerEndpoint);
 				newSession.setTlsConnection((obs instanceof TLSServer) ? true : false);
 				newSession.addObserver(this);
+				newSession.setIpAdress(ipAddress);
 				getV2gCommunicationSessions().put(ipAddress, newSession);
 
+				wallboxServerEndpoint.addCommunicationSession(ipAddress);
 				wallboxServerEndpoint.sendMessage("Initializing new session: " + ipAddress + ", Session-ID: " + newSession.getSessionID().toString());
 
 				manageConnectionHandlers((ConnectionHandler) obj);

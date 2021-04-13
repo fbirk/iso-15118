@@ -35,6 +35,7 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.UnitSymbolType;
 public class WallboxServerEndpoint extends CommunicationSessionApiService {
 
 	private Hashtable<String, WallboxDAO> sessions;
+	private String lastSession = "";
 
 	public WallboxServerEndpoint() {
 		sessions = new Hashtable<String, WallboxDAO>();
@@ -46,8 +47,7 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 
 	@Override
 	public Response addCommunicationSession(SecurityContext securityContext) throws NotFoundException {
-
-		return Response.ok().entity("1").build();
+		return Response.ok().entity(lastSession).build();
 	}
 
 	@Override
@@ -294,5 +294,10 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 	 */
 	public WallboxDAO getWallboxDAO(String sessionID) {
 		return sessions.get(sessionID);
+	}
+	
+	public void addCommunicationSession(String sessionID) {
+		sessions.put(sessionID, new WallboxDAO());
+		lastSession = sessionID;
 	}
 }

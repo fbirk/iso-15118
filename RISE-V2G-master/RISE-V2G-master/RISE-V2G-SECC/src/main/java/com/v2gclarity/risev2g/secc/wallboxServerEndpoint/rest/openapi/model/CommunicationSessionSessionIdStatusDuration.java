@@ -30,7 +30,7 @@ import javax.validation.Valid;
   CommunicationSessionSessionIdStatusDuration.JSON_PROPERTY_MINUTES,
   CommunicationSessionSessionIdStatusDuration.JSON_PROPERTY_SECONDS
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-16T21:26:11.753974200+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-04-13T20:22:41.945526600+02:00[Europe/Berlin]")
 public class CommunicationSessionSessionIdStatusDuration   {
   public static final String JSON_PROPERTY_HOURS = "hours";
   @JsonProperty(JSON_PROPERTY_HOURS)

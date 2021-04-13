@@ -36,7 +36,7 @@ import javax.validation.Valid;
   ChargeParameterDcChargeParameter.JSON_PROPERTY_PEAK_CURRENT_RIPPLE,
   ChargeParameterDcChargeParameter.JSON_PROPERTY_ENERGY_TO_BE_DELIVERED
 })
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-03-16T21:26:11.753974200+01:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaJerseyServerCodegen", date = "2021-04-13T20:22:41.945526600+02:00[Europe/Berlin]")
 public class ChargeParameterDcChargeParameter   {
   public static final String JSON_PROPERTY_MAX_CURRENT_LIMIT = "max-current-limit";
   @JsonProperty(JSON_PROPERTY_MAX_CURRENT_LIMIT)

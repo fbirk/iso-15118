@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.v2gclarity.risev2g.secc.session.V2GCommunicationSessionSECC;
+import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.WallboxDAO;
 import com.v2gclarity.risev2g.shared.enumerations.GlobalValues;
 import com.v2gclarity.risev2g.shared.utils.SecurityUtils;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.CertificateChainType;
@@ -24,8 +25,11 @@ public class HSRMWallboxBackend implements IBackendInterface {
 	
 	@Override
 	public void setCommSessionContext(V2GCommunicationSessionSECC commSessionContext) {
-		// TODO Auto-generated method stub
-
+		this.commSessionContext = commSessionContext;
+	}
+	
+	public V2GCommunicationSessionSECC getCommSessionContext() {
+		return this.commSessionContext;
 	}
 
 	@Override
@@ -37,10 +41,9 @@ public class HSRMWallboxBackend implements IBackendInterface {
 	public SAScheduleListType getSAScheduleList(int maxEntriesSAScheduleTuple, long departureTime, HashMap<String, byte[]> xmlSignatureRefElements, short selectedSAScheduleTupleId) {
 		String sessionID = commSessionContext.getSessionID().toString();
 		
-		commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID);
+		WallboxDAO dao = commSessionContext.getWallboxServerEndpoint().getWallboxDAO(sessionID);
 		
-		// TODO Auto-generated method stub
-		return null;
+		return dao.getSaScheduleList();
 	}
 
 	@Override
