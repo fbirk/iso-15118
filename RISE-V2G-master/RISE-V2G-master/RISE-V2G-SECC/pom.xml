@@ -195,7 +195,9 @@
 								server stub) -->
 							<generatorName>jaxrs-jersey</generatorName>
 							<!-- Don't overwrite previously generated files -->
-							<skipOverwrite>false</skipOverwrite>
+							<skipOverwrite>true</skipOverwrite>
+							<interfaceOnly>true</interfaceOnly>
+							<skipDefaultInterface>true</skipDefaultInterface>
 							<configOptions>
 								<!-- the root src folder in the output folder -->
 								<sourceFolder>src/main/java/</sourceFolder>
