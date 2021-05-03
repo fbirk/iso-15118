@@ -183,6 +183,7 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 			} else {
 				incomingMessage = (V2GMessage) getMessageHandler().exiToV2gMsg(getV2gTpMessage().getPayload());
 			}
+			wallboxServerEndpoint.sendSessionStatusMessage(incomingMessage.toString(), getIpAdress());
 
 			processReaction(getCurrentState().processIncomingMessage(incomingMessage));
 		} else {
@@ -190,7 +191,7 @@ public class V2GCommunicationSessionSECC extends V2GCommunicationSession impleme
 		}
 	}
 
-	private void processReaction(ReactionToIncomingMessage reactionToIncomingMessage) {
+	private void processReaction(ReactionToIncomingMessage reactionToIncomingMessage) {		
 		// Check the outcome of the processIncomingMessage() of the respective state
 		if (reactionToIncomingMessage instanceof SendMessage) {
 			send((SendMessage) reactionToIncomingMessage);

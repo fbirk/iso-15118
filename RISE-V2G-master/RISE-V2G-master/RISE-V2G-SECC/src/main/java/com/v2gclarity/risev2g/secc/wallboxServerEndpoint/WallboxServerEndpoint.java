@@ -2,12 +2,22 @@ package com.v2gclarity.risev2g.secc.wallboxServerEndpoint;
 
 import java.util.Hashtable;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.paho.client.mqttv3.IMqttClient;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 import com.v2gclarity.risev2g.secc.backend.IBackendInterface;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.CommunicationSessionApiService;
@@ -21,6 +31,7 @@ import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.SASc
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.Status;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.WallboxAPIPhysicalValueType;
 import com.v2gclarity.risev2g.secc.wallboxServerEndpoint.rest.openapi.model.WallboxAPIPhysicalValueType.UnitEnum;
+import com.v2gclarity.risev2g.shared.utils.MiscUtils;
 import com.v2gclarity.risev2g.shared.utils.SecurityUtils;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.EVSENotificationType;
 import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.PMaxScheduleEntryType;
@@ -34,15 +45,63 @@ import com.v2gclarity.risev2g.shared.v2gMessages.msgDef.UnitSymbolType;
 
 public class WallboxServerEndpoint extends CommunicationSessionApiService {
 
+	private Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
 	private Hashtable<String, WallboxDAO> sessions;
 	private String lastSession = "";
+	private String mqttDomain;
+	private int mqttPort;
+	private int mqttQoS;
+	private IMqttClient publisher;
 
 	public WallboxServerEndpoint() {
 		sessions = new Hashtable<String, WallboxDAO>();
+		mqttDomain = (String) MiscUtils.getPropertyValue("mqtt.domain");
+		mqttPort = (int) MiscUtils.getPropertyValue("mqtt.port");
+		mqttQoS = (int) MiscUtils.getPropertyValue("mqtt.qos");
+		
+		initMqttClient();
 	}
 
-	public void sendMessage(String string) {
-		// TODO Auto-generated method stub
+	private void initMqttClient() {
+		String publisherId = UUID.randomUUID().toString();
+		try {
+			// TODO: Async version
+			publisher = new MqttClient("tcp://" + mqttDomain + ":" + mqttPort, publisherId);
+			
+			MqttConnectOptions options = new MqttConnectOptions();
+			options.setAutomaticReconnect(true);
+			options.setCleanSession(true);
+			options.setConnectionTimeout(10);
+			publisher.connect(options);
+		} catch (MqttException e) {
+			getLogger().error("Failed to connect the MQTTClient (MqttException)", e);
+		}
+	}
+
+	public void sendSessionStatusMessage(String payload, String sessionID) {
+		String topic = "energiebroker/" + sessionID + "/session-status";
+		sendMessage(payload, topic);
+	}
+	
+	public void sendStateOfChargeMessagen(String payload, String sessionID) {
+		String topic = "energiebroker/" + sessionID + "/ev-state-of-charge";
+		sendMessage(payload, topic);
+	}
+	
+	
+	private void sendMessage(String payload, String topic) {
+		MqttMessage msg = new MqttMessage(payload.getBytes());
+		
+		msg.setQos(mqttQoS);
+		msg.setRetained(true);
+		
+		try {
+			publisher.publish(topic, msg);
+		} catch (MqttPersistenceException e) {
+			getLogger().error("Failed to publish a mqtt message to the topic '"+ topic +"' (MqttPersistenceException)" + e.getMessage());
+		} catch (MqttException e) {
+			getLogger().error("Failed to publish a mqtt message to the topic '"+ topic +"' (MqttException)" + e.getMessage());
+		}
 	}
 
 	@Override
@@ -295,9 +354,17 @@ public class WallboxServerEndpoint extends CommunicationSessionApiService {
 	public WallboxDAO getWallboxDAO(String sessionID) {
 		return sessions.get(sessionID);
 	}
-	
+
 	public void addCommunicationSession(String sessionID) {
 		sessions.put(sessionID, new WallboxDAO());
 		lastSession = sessionID;
+	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+
+	public void setLogger(Logger logger) {
+		this.logger = logger;
 	}
 }

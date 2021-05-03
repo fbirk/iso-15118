@@ -249,6 +249,32 @@ public final class MiscUtils {
 				returnValue = 5;
 			}
 			break;
+		case "mqtt.domain":
+			returnValue = propertyValue;
+			break;
+		case "mqtt.port":
+			try {
+				returnValue = Integer.parseInt(propertyValue);
+			} catch (NumberFormatException e) {
+				getLogger().warn("MQTT port number '" + propertyValue + "' listed in properties file is not supported. " +
+							     "Setting default value to 1883", e);
+				getProperties().setProperty("mqtt.port", "1883");
+				returnValue = 1883;
+			}
+			break;
+		case "mqtt.qos":
+			try {
+				returnValue = Integer.parseInt(propertyValue);
+				if (((int)returnValue) > 2 || ((int)returnValue < 0)) {
+					throw new NumberFormatException();
+				}
+			} catch (NumberFormatException e) {
+				getLogger().warn("MQTT QoS'" + propertyValue + "' listed in properties file is not supported. " +
+							     "Setting default value to 0", e);
+				getProperties().setProperty("mqtt.qos", "0");
+				returnValue = 0;
+			}
+			break;
 		default:
 			getLogger().error("No property with name '" + propertyKey + "' found");
 		}

@@ -110,8 +110,8 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				 * instantiated, otherwise it may lead to race conditions.
 				 */
 				getLogger().debug("Resuming previous communication session ...");
-				wallboxServerEndpoint.sendMessage("Resuming session." + ipAddress + " ");
 				V2GCommunicationSessionSECC continuedSession = getV2gCommunicationSessions().get(ipAddress);
+				wallboxServerEndpoint.sendSessionStatusMessage("Resuming session.", ipAddress);
 
 				// Reset charging session state from previous session (namely
 				// ChargingSessionType.PAUSE) to avoid confusion in the algorithm
@@ -132,7 +132,7 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				getV2gCommunicationSessions().put(ipAddress, newSession);
 
 				wallboxServerEndpoint.addCommunicationSession(ipAddress);
-				wallboxServerEndpoint.sendMessage("Initializing new session: " + ipAddress + ", Session-ID: " + newSession.getSessionID().toString());
+				wallboxServerEndpoint.sendSessionStatusMessage("Initializing new session" + ", Session-ID: " + newSession.getSessionID().toString(), ipAddress);
 
 				manageConnectionHandlers((ConnectionHandler) obj);
 			}
@@ -141,11 +141,11 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 			String ipAddress = ((V2GCommunicationSessionSECC) obs).getConnectionHandler().getAddress();
 			getV2gCommunicationSessions().remove(ipAddress);
 
-			wallboxServerEndpoint.sendMessage("Stopping session: " + ipAddress);
+			wallboxServerEndpoint.sendSessionStatusMessage("Stopping session", ipAddress);
 
 			stopConnectionHandler(((V2GCommunicationSessionSECC) obs).getConnectionHandler(), false);
 		} else if (obs instanceof V2GCommunicationSessionSECC && obj instanceof PauseSession) {
-			wallboxServerEndpoint.sendMessage("Pausing session: " + ((V2GCommunicationSessionSECC) obs).getSessionID().toString());
+			wallboxServerEndpoint.sendSessionStatusMessage("Pausing session: " + ((V2GCommunicationSessionSECC) obs).getSessionID().toString(), ((V2GCommunicationSessionSECC) obs).getIpAdress());
 
 			// Stop the connection handler, but keep the V2GCommunicationSessionSECC
 			// instance in the hash map
@@ -174,8 +174,6 @@ public class V2GCommunicationSessionHandlerSECC implements Observer {
 				SECCDiscoveryReq seccDiscoveryReq = new SECCDiscoveryReq(getV2gTpMessage().getPayload());
 				setSecurity(seccDiscoveryReq.getSecurity());
 				getLogger().debug("SECCDiscoveryReq received");
-
-				wallboxServerEndpoint.sendMessage("SECCDiscoveryReq received");
 
 				/*
 				 * The TCP and TLS server ports are created upon initialization of the TCP/TLS
