@@ -1,18 +1,8 @@
-# Implementierung des ISO-15118 für Devolo_dLan_GreenPHY eval Boards
+# Implementierung des ISO-15118 fuer Devolo_dLan_GreenPHY eval Boards
 
 ## Inhalt
 
-1. [Setup](#setup)  
- 1.1 [Eval-Boards](#eval-boards)  
- 1.2 [Host-System](#host-system)  
-    1.3 [RISE V2G Open Source
-    Implementierung](#rise-v2g-open-source-implementierung)  
-2. [Kommunikation zwischen Host und Eval
-   Boards](#kommunikation-zwischen-host-und-eval-boards)  
-   2.1 [Erste Verbindungs und
-   Statusabfrage](#erste-verbindungs-und-statusabfrage)  
-   2.2 [NMK neu setzen](#nmk-neu-setzen)
-3. [Websocket Interface Wallbox-SECC](#websocket-interface-wallbox-secc)
+[[_TOC_]]
 
 ## Setup
 
@@ -25,20 +15,20 @@ Anschluss der Kabel folgendem Bild bzw. der Anleitung entnehmen (links PEV,
 rechts EVSE):
 ![image](setup_evalboards_3.jpg)
 
-* Stromversorgung über Micro-USB Anschluss (hier über USB-Hub betrieben)
-* es gibt 3 Möglichkeiten, wie zwei eval boards untereinander kommunizieren
-  können, abhängig ist dies davon, wie die Jumper JC6, JC7 und JC8 belegt sind:
+* Stromversorgung ueber Micro-USB Anschluss (hier ueber USB-Hub betrieben)
+* es gibt 3 Moeglichkeiten, wie zwei eval boards untereinander kommunizieren
+  koennen, abhaengig ist dies davon, wie die Jumper JC6, JC7 und JC8 belegt sind:
   * (*JC8 geschlossen, JC7 offen*) Powerline-Anschluss (AC-Line) beider Boards an **gleicher** Mehrfachsteckdosenleiste
-    * (*JC7 geschlossen, JC8 offen, JC6 offen für 100W impendanz*) beide Boards über Twisted-Pair-Anschluss verbunden (grüner Stecker), Belegung jeweils:
+    * (*JC7 geschlossen, JC8 offen, JC6 offen fuer 100W impendanz*) beide Boards ueber Twisted-Pair-Anschluss verbunden (gruener Stecker), Belegung jeweils:
       * links blaues Kabel
         * rechts braunes Kabel
-    * (*JC7 geschlossen, JC8 offen, JC6 geschlossen für 50W impendanz*) Koax-Kabel
-* Kommunikation zum Host (Entwicklungsrechner) über Ethernet
+    * (*JC7 geschlossen, JC8 offen, JC6 geschlossen fuer 50W impendanz*) Koax-Kabel
+* Kommunikation zum Host (Entwicklungsrechner) ueber Ethernet
 
 ### Host-System
 
 * open-plc-utils installieren
-  * für Arch-Linux als AUR-Package
+  * fuer Arch-Linux als AUR-Package
   * andernfalls suchen oder von [GitHub](https://github.com/qca/open-plc-utils)
     beziehen
 
@@ -46,7 +36,7 @@ rechts EVSE):
 
 * Download des [GitHub Repos](https://github.com/V2GClarity/RISE-V2G)
 * RISE-V2G-SHARED/pom.xml anpassen:
-  * folgendes unter `<dependencies>` einfügen:
+  * folgendes unter `<dependencies>` einfuegen:
 
  ```XML
  <dependency>
@@ -63,20 +53,21 @@ rechts EVSE):
  ```
 
 * die javax.xml.bind dependencies wurden im JDK Version > 8 entfernt und
-      müssen so nachträglich installiert werden
+      muessen so nachtraeglich installiert werden
 * maven-dependancies laden und das Projekt bauen
+* EVCC/SECC Config siehe [Netzwerk-Interface bestimmen](#netzwerk-interface-bestimmen)
 * zum ersten Testen:
-  * StartEVCC ausführen (RISE-V2G-EVCC > src > main >
+  * StartEVCC ausfuehren (RISE-V2G-EVCC > src > main >
       com.v2gclarity.risev2g.evcc > main)
-    * StartSECC ausführen (RISE-V2G-SECC > analog zu oben )
+  * StartSECC ausfuehren (RISE-V2G-SECC > analog zu oben )
 
 ## Kommunikation zwischen Host und Eval Boards
 
-Die Eval-Boards haben eine Atheros QCA7000 Chip und können über die, durch
+Die Eval-Boards haben eine Atheros QCA7000 Chip und koennen ueber die, durch
 open-plc-utils mitgelierferten, Programme und Skripte angesprochen und gesteuert
 werden.
 > Hinweis: Statt wie in der open-plc Doku verwendeten int6k.. Programme die
-> pcltool.. Programme für den neueren QCA7000 Chip verwenden
+> pcltool.. Programme fuer den neueren QCA7000 Chip verwenden
 
 Die Boards sind bereits vorkonfiguriert und entsprechend geflasht.
 Vorbelegten MACs und entsprechende Ethernet-Interfaces (auf dem Host-System):
@@ -87,17 +78,17 @@ Vorbelegten MACs und entsprechende Ethernet-Interfaces (auf dem Host-System):
 ### Erste Verbindungs und Statusabfrage
 
 * **plctool -m**: Netzwerk-Config abfragen
-  * `network->STATIONS = 1` zeigt, dass das Board über Powerline mit einem
-    Netzwerk Verbindung aufgebaut hat, was auch aus der Übertragungsrate > 0
+  * `network->STATIONS = 1` zeigt, dass das Board ueber Powerline mit einem
+    Netzwerk Verbindung aufgebaut hat, was auch aus der Ãœbertragungsrate > 0
     deutlich wird
 * **plctool -r**: Firmware und Hardware Infos abfragen
 * **plctool -I**: Den PBI-Header auslesen
-  * *DAK*: Device Access Key (für jedes Board individuell)
-  * *NMK*: Network membership key (muss für beide gleich sein, um einem Netzwerk
+  * *DAK*: Device Access Key (fuer jedes Board individuell)
+  * *NMK*: Network membership key (muss fuer beide gleich sein, um einem Netzwerk
     zugeordnet zu sein)
 
 ```shell
-❯ plctool -m -i enp0s20f0u2u4
+> plctool -m -i enp0s20f0u2u4
 enp0s20f0u2u4 00:B0:52:00:00:01 Fetch Network Information
 enp0s20f0u2u4 BC:F2:AF:F1:4F:C4 Found 1 Network(s)
 
@@ -136,10 +127,10 @@ enp0s20f0u2u4 BC:F2:AF:F1:4F:C4 QCA7000 MAC-QCA7000-1.1.0.727-02-20130826-FINAL
 
 ### NMK neu setzen
 
-Sollte der Network Membership Key (NMK) eines der Boards verändert worden sein,
+Sollte der Network Membership Key (NMK) eines der Boards veraendert worden sein,
 kann dieser mittels folgendem Befehl neu gesetzt werden:
 (anzupassen sind jeweils Ethernet-Interface, MAC-Adresse und NMK des anderen
-Boards, zu welchem Netzwerk man sich verbinden möchte)
+Boards, zu welchem Netzwerk man sich verbinden moechte)
 
 ```shell
 plctool -i eth1 -p settings.pib BC:F2:AF:F1:CC:03 && \
@@ -147,30 +138,76 @@ plctool -i eth1 -p settings.pib BC:F2:AF:F1:CC:03 && \
       plctool -i eth1 -P settings.pib BC:F2:AF:F1:CC:03
 ```
 
-## Websocket Interface Wallbox-SECC
+---
 
-Um die Kommunikation mit dem PEV über ISO-15118 steuern zu können, wird eine Websocket-API eingeführt, über welche die benötigten Daten abegerufen bzw. übertragen werden können. Der Server ist unter folgender URL zu erreichen: [ws://localhost:8080/v2gServer/](ws://localhost:8080/v2gServer/).
+## Implementierung
 
-### Websocket Nachrichten
+Diese ISO-15118 Implementierung baut auf der Referenz-Implementierung [RISE-V2G](https://github.com/V2GClarity/RISE-V2G) von Dr. Marc Mueltin auf. Das Repository wurde um eine REST Schnittstelle und deren Integration in RISE V2G erweitert, um den ISO-15118 in der Laborumgebung der HSRM einbinden zu koennen. Die REST Schnittstelle wurde nach der [OpenAPI Specification](https://spec.openapis.org/oas/v3.0.3) entwickelt.
 
-Die Nachrichten werden als JSON übertragen. Anbei eine Beispiel-Nachricht nach erfolgreichem Verbindungsaufbau:
+### Bestandteile
 
-```json
-{
- "messageType":"sessionStartReq",
- "title":"Connected",
- "value":""
-}
+Das RISE V2G Repo besteht zunaechst aus 5 Ordnern:
 
-{
- "messageType":"discoveryReq",
- "title":"SECCDiscoveryReq received.",
- "value":"Security: 16"
-}
+* **Certificates**: Hier liegen die Zertifikate der Entwicklungsumgebung
+* **EVCC**: Der EVCC Client Code (wird hier nur zum Testen gebraucht, uebernimmt ansonsten das PEV)
+* **PARENT**: Uebergeordnetes Projekt in der IDE
+* **SECC**: Die Implementierung der Wallbox-Seite (der spannende Teil dieser Arbeit)
+* **Shared**: Gemeinsame Packete der EVCC und SECC Implementierung
 
-{
- "messageType":"discoveryReq",
- "title":"Initializing new session.",
- "value":"fe80:0:0:0:2e0:4cff:fe68:241e%7"
-}
+Darueber hinaus liegen im Root-Folder des Repos noch die Dateien *EVCCConfig.properties* und *SECCConfig.properties* in welchem allgemeine Einstellungen der ISO Implementierung hinterlegt sind. Das sind z.B.:
+
+* Netzwerk-Interface der Powerline Kommunikation
+  * **Achtung!**: Diese Einstellung ist abhaengig von der jeweiligen Hardware welche den SECC-Server ausfuehrt. Unter Linux ist der Default *eth0* unter Windows *6*. Siehe mehr dazu unter [Netzwerk-Interface bestimmen](#netzwerk-interface-bestimmen)
+* Unterstuetzte Lade-Modi (bspw. AC dreiphasig, DC einphasig, usw.)
+* kostenloses Laden oder bezahl Laden
+* Einstellung bzgl. des EXI Codecs und des Umfangs des Loggings der EXI Daten
+
+#### Netzwerk-Interface bestimmen
+
+##### Linux
+
+Je nach installierten Paketen einer der folgenden Befehle in der Konsole ausfuehren. Das Paket *ifconfig* ist inzwischen veraltet und nicht immer als default installiert.
+
+```bash
+ifconfig -a | grep Link
 ```
+
+```bash
+ip link show
+```
+
+![ip link output](https://assets.linux-audit.com/wp-content/uploads/2015/10/linux-network-interfaces-with-ip-link.png)
+
+Hier ist das Netzwerk-Interface z.B.: **enp0s3**
+
+##### Windows
+
+Unter Windows ist nicht der Name des Interfaces sondern dessen Index anzugeben. Der folgende Befehl in *PowerShell* produziert z.B. untenstehenden Output.
+
+```sh
+Get-NetIPInterface
+```
+
+```sh
+ifIndex InterfaceAlias                  AddressFamily NlMtu(Bytes) InterfaceMetric Dhcp     ConnectionState PolicyStore
+------- --------------                  ------------- ------------ --------------- ----     --------------- -----------
+5       Ethernet 3                      IPv6                  1350              25 Enabled  Disconnected    ActiveStore
+13      Ethernet 2                      IPv6                  1500              35 Enabled  Connected       ActiveStore
+6       OpenVPN TAP-Windows6            IPv6                  1500              25 Enabled  Disconnected    ActiveStore
+7       Ethernet                        IPv6                  1500               5 Enabled  Disconnected    ActiveStore
+9       OpenVPN Wintun                  IPv6                 65535               5 Disabled Disconnected    ActiveStore
+1       Loopback Pseudo-Interface 1     IPv6            4294967295              75 Disabled Connected       ActiveStore
+5       Ethernet 3                      IPv4                  1350              25 Enabled  Disconnected    ActiveStore
+13      Ethernet 2                      IPv4                  1500              35 Enabled  Connected       ActiveStore
+6       OpenVPN TAP-Windows6            IPv4                  1500              25 Enabled  Disconnected    ActiveStore
+7       Ethernet                        IPv4                  1500               5 Enabled  Disconnected    ActiveStore
+9       OpenVPN Wintun                  IPv4                 65535               5 Disabled Disconnected    ActiveStore
+1       Loopback Pseudo-Interface 1     IPv4            4294967295              75 Disabled Connected       ActiveStore
+
+```
+
+Hier ist ein moegliches Interface die *13* oder *7* oder *5* (nach bewaehrtem Trial-and-Error Verfahren)
+
+### OpenAPI
+
+Eine Dokumentation der API findet sich unter *RISE-V2G-SECC/index.html* oder alternativ die API Definition unter *RISE-V2G-SECC/src/main/resources/hsrm-wallbox-api.yaml* kopieren und in den [Swagger Editor](https://editor.swagger.io/) kopieren.
