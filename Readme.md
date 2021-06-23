@@ -211,3 +211,27 @@ Hier ist ein moegliches Interface die *13* oder *7* oder *5* (nach bewaehrtem Tr
 ### OpenAPI
 
 Eine Dokumentation der API findet sich unter *RISE-V2G-SECC/index.html* oder alternativ die API Definition unter *RISE-V2G-SECC/src/main/resources/hsrm-wallbox-api.yaml* kopieren und in den [Swagger Editor](https://editor.swagger.io/) kopieren.
+
+In dieser API-Definition ist der Aufbau der REST-API festgelegt und alle für die Schnittstelle relevanten Klassen und Dateien werden auf Basis dieser Definition automatisch erzeugt. Änderungen an der Schnittstelle werden hier durchgeführt und dann durch den Maven-Build getriggert. Die Beschreibung der Schnittstelle wird wie oben beschrieben direkt auf Basis der YAML-Datei erzeugt und daher nicht hier dokumentiert um die Akutalität der Beschreibung zu gewährleisten.
+
+#### Automatisches erzeugen der REST-API Java Klassen durch den Maven Build Prozess
+
+Unter RISE-V2G-SECC > pom.xml ist die Maven Build-Defintion für den SECC Teil zu finden. Dieser wurde um die, für das Projekt notwendigen, Abhängigkeiten erweitert, sowie um das Plugin *openapi-generator-maven-plugin*.
+Dieses Plugin erzeugt den REST Server mit allen relevanten Klassen automatisch und überschreibt die bestehenden Klassen. Folgende Einstellungen wurden vorgenommen:
+
+* inputSpec: gibt an, wo die OpenAPI YAML Datei zu finden ist
+* invokerPackage, modelPackage, groupId, packageName, apiPackage: Bestimmt den Namespace und Ablageort der erzeugten Dateien
+* generatorName: welcher Server-Stub erzeugt werden soll. Die Dokumentation für den jaxrs-jersey Server ist hier zu finden: [Config Options for jaxrx-jersey](https://openapi-generator.tech/docs/generators/jaxrs-jersey/)
+* configOptions/sourceFolder: per default wird der Server-Stub unter der Projekt-Root/Target angelegt, hier wird der Server-Stub neben der restlichen Implementierung angelegt unter src/main/java + dem oben definierten Namespace
+
+Beim Build erkennt das Tool automatisch, ob sich die YAML-Datei verändert hat (vergleich gegen einen Hash unter .openapi-generator/) und triggert den Build.
+> **ACHTUNG!** Nach dem Build muss hier leider noch manuell in *CommunicationSessionApiServiceFactory* in Zeile8 statt der default Interface-Implementierung durch die eigenen Implementierung erstetzt werden:
+> 
+> ```JAVA
+> private static final CommunicationSessionApiService service = new WallboxServerEndpoint();
+> ```
+
+### REST-API
+
+Durch OpenAPI wird ein fertiger REST-Server erzeugt, welcher jedoch nur das Grundgerüst darstellt ohne Logik.  
+Die jeweiligen Aktionen auf die REST-Methoden sind in der Klasse WallboxServerEndpoint.java implementiert. Hier werden die Kommunikationsparameter an das Backend übergeben, sodass sie von dort im weiteren Verlauf der ISO-15118 Kommunikation abgerufen werden können.
