@@ -235,3 +235,18 @@ Beim Build erkennt das Tool automatisch, ob sich die YAML-Datei verändert hat (
 
 Durch OpenAPI wird ein fertiger REST-Server erzeugt, welcher jedoch nur das Grundgerüst darstellt ohne Logik.  
 Die jeweiligen Aktionen auf die REST-Methoden sind in der Klasse WallboxServerEndpoint.java implementiert. Hier werden die Kommunikationsparameter an das Backend übergeben, sodass sie von dort im weiteren Verlauf der ISO-15118 Kommunikation abgerufen werden können.
+
+## To-Do/Projekt-Status
+
+* [ ] REST-API
+  * [x] Server erzeugen von OpenAPI Spec
+  * [x] REST-Parameter an Backend übergeben
+  * [x] Daten von Backend abfragen während ISO-15118 Kommunikation
+  * [ ] Protokoll pausieren bis Daten vorhanden (funktioniert nicht?, evtl. erst Daten per REST übergeben und dann SECC starten)
+  * [ ] OpenAPI code generator anpassen, sodass Implementierung nicht manuell Instanziert werden muss
+* [ ] MQTT
+  * [x] MQTT-Client erzeugen
+  * [x] MQTT Settings aus SECCConfig.properties lesen
+  * [x] Nachrichten an MQTT-Client übergeben
+  * [ ] MQTT Broker/Server erzeugen
+  * [ ] MQTT Testen
